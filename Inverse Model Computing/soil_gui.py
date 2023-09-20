@@ -176,7 +176,6 @@ class Ui_MainWindow(object):
         self.spinBox_11 = QtWidgets.QSpinBox(self.layoutWidget_2)
         self.spinBox_11.setObjectName("spinBox_11")
         self.horizontalLayout_4.addWidget(self.spinBox_11)
-
         # Set the range for the lam spin box
         self.spinBox_11.setMinimum(5)
         self.spinBox_11.setMaximum(30)
@@ -193,13 +192,13 @@ class Ui_MainWindow(object):
         self.spinBox_10.setMinimum(1)
         self.spinBox_10.setMaximum(10)
 
-        # 设置文本框的属性
+        # Set the features of text boxes
         text_boxes = [self.textEdit_8, self.textEdit_9, self.textEdit_10]
         for text_box in text_boxes:
-                text_box.setReadOnly(True)  # 设置文本框为只读
+                text_box.setReadOnly(True)  
                 #text_box.setAlignment(QtCore.Qt.AlignCenter)
                 text_box.setStyleSheet("QTextEdit { text-align: center; }")
-                text_box.setFixedHeight(30)  # 设置文本框的高度
+                text_box.setFixedHeight(30)  
 
         ''' Pushbutton_5 is the Apply of Inversion'''
         self.pushButton_5 = QtWidgets.QPushButton(self.Inversion)
@@ -213,16 +212,16 @@ class Ui_MainWindow(object):
         self.pushButton_9 = QtWidgets.QPushButton(self.Inversion)
         self.pushButton_9.setGeometry(QtCore.QRect(440, 60, 111, 41))
         self.pushButton_9.setObjectName("pushButton_9")
-
+        self.pushButton_9.clicked.connect(self.saveFig)
         self.listView_3 = QtWidgets.QListView(self.Inversion)
         self.listView_3.setGeometry(QtCore.QRect(30, 110, 711, 431))
         self.listView_3.setObjectName("listView_3")
         self.inversion_result_widget = QtWidgets.QWidget(self.Inversion)
 
         '''Embed the generated pics in the main window'''
-        self.inversion_result_widget.setGeometry(QtCore.QRect(0, 100, 711, 431))  # 设置显示区域的位置和大小
+        self.inversion_result_widget.setGeometry(QtCore.QRect(0, 100, 711, 431))  # set up the presenting zone for figure
         self.inversion_result_widget.setObjectName("inversion_result_widget")
-        self.inversion_result_layout = QtWidgets.QVBoxLayout(self.inversion_result_widget)  # 使用布局来管理显示区域
+        self.inversion_result_layout = QtWidgets.QVBoxLayout(self.inversion_result_widget) 
         self.inversion_result_layout.setObjectName("inversion_result_layout")   
         self.tabWidget.addTab(self.Inversion, "")
 
@@ -371,13 +370,27 @@ class Ui_MainWindow(object):
         plt.tight_layout()
 
         #plt.show()
-        # 将图形嵌入到 QWidget 中
-        self.canvas = FigureCanvas(fig1)  # 使用 FigureCanvas 来显示 Matplotlib 图形
-        self.inversion_result_layout.addWidget(self.canvas)  # 将图形添加到布局中
+        # Embed the generated figure in QWidget
+        self.canvas = FigureCanvas(fig1)  # use FigureCanvas to show Matplotlib generated figure
+        self.inversion_result_layout.addWidget(self.canvas)  
 
-        # 刷新显示
+        # update the plot showing and save the fig1 for function saveFig later
         self.inversion_result_widget.update()
+        self.fig1 = fig1
 
+    def saveFig(self):
+        # Prompt the user to select a location for saving the figure
+        options = QtWidgets.QFileDialog.Options()
+        options |= QtWidgets.QFileDialog.ReadOnly
+        file_name, _ = QtWidgets.QFileDialog.getSaveFileName(
+        None, "Save Figure", "", "PNG Files (*.png);;All Files (*)", options=options
+        )
+
+        if file_name:
+            # Save the figure as a PNG file
+            self.fig1.savefig(file_name, format="png")  # Use the fig1 object obtained from startInversion
+
+        
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
