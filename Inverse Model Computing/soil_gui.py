@@ -16,6 +16,8 @@ from pygimli.physics import ert
 import pybert as pb
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -140,6 +142,11 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addLayout(self.horizontalLayout_3)
         self.tabWidget.addTab(self.Domain_Mesh, "")
 
+        '''
+        Below is the code for the section of window Inversion, 
+        including 3 spin boxes to let user select values for maxIteration times, lambda and dPhi
+        for the function of invert. Parameters and value limits can be modified according to the requirements of client
+        '''
         self.Inversion = QtWidgets.QWidget()
         self.Inversion.setObjectName("Inversion")
         self.layoutWidget_2 = QtWidgets.QWidget(self.Inversion)
@@ -151,6 +158,7 @@ class Ui_MainWindow(object):
         self.textEdit_8 = QtWidgets.QTextEdit(self.layoutWidget_2)
         self.textEdit_8.setObjectName("textEdit_8")
         self.horizontalLayout_4.addWidget(self.textEdit_8)
+
 
         '''Max iteration of Inversion '''
         self.spinBox_8 = QtWidgets.QSpinBox(self.layoutWidget_2)
@@ -165,16 +173,13 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4.addWidget(self.textEdit_9)
         
         '''Lambda of inversion'''
-        self.spinBox_11 = QtWidgets.QDoubleSpinBox(self.layoutWidget_2)
+        self.spinBox_11 = QtWidgets.QSpinBox(self.layoutWidget_2)
         self.spinBox_11.setObjectName("spinBox_11")
         self.horizontalLayout_4.addWidget(self.spinBox_11)
 
         # Set the range for the lam spin box
-        self.spinBox_11.setMinimum(0.1)
-        self.spinBox_11.setMaximum(0.9)
-
-        # Set the step size to 0.1
-        self.spinBox_11.setSingleStep(0.1)
+        self.spinBox_11.setMinimum(5)
+        self.spinBox_11.setMaximum(30)
 
         self.textEdit_10 = QtWidgets.QTextEdit(self.layoutWidget_2)
         self.textEdit_10.setObjectName("textEdit_10")
@@ -187,6 +192,14 @@ class Ui_MainWindow(object):
         # Set the range for the dPhi spin box
         self.spinBox_10.setMinimum(1)
         self.spinBox_10.setMaximum(10)
+
+        # 设置文本框的属性
+        text_boxes = [self.textEdit_8, self.textEdit_9, self.textEdit_10]
+        for text_box in text_boxes:
+                text_box.setReadOnly(True)  # 设置文本框为只读
+                #text_box.setAlignment(QtCore.Qt.AlignCenter)
+                text_box.setStyleSheet("QTextEdit { text-align: center; }")
+                text_box.setFixedHeight(30)  # 设置文本框的高度
 
         ''' Pushbutton_5 is the Apply of Inversion'''
         self.pushButton_5 = QtWidgets.QPushButton(self.Inversion)
@@ -204,7 +217,15 @@ class Ui_MainWindow(object):
         self.listView_3 = QtWidgets.QListView(self.Inversion)
         self.listView_3.setGeometry(QtCore.QRect(30, 110, 711, 431))
         self.listView_3.setObjectName("listView_3")
+        self.inversion_result_widget = QtWidgets.QWidget(self.Inversion)
+
+        '''Embed the generated pics in the main window'''
+        self.inversion_result_widget.setGeometry(QtCore.QRect(0, 100, 711, 431))  # 设置显示区域的位置和大小
+        self.inversion_result_widget.setObjectName("inversion_result_widget")
+        self.inversion_result_layout = QtWidgets.QVBoxLayout(self.inversion_result_widget)  # 使用布局来管理显示区域
+        self.inversion_result_layout.setObjectName("inversion_result_layout")   
         self.tabWidget.addTab(self.Inversion, "")
+
         self.tab_5 = QtWidgets.QWidget()
         self.tab_5.setObjectName("tab_5")
         self.textEdit_11 = QtWidgets.QTextEdit(self.tab_5)
@@ -301,15 +322,21 @@ class Ui_MainWindow(object):
         lam = self.spinBox_11.value()
         dPhi = self.spinBox_10.value()
 
+        '''
+        The code below is for preparation of inverting, later will be merged and the needed 2 values:
+        inv = mgr.invert(mesh=mesh, lam=lam, maxIter=6, dPhi=2, CHI1OPT=5, Verbose=True)
+        mgr and mesh will inherit from previous sections: data processing and Domain selection/ meshing
+        '''
+       
         file_to_convert = '/Users/mac/Desktop/MITUWA/Third_semester/Capstone/Soil-Conditions/Initial Prototype/data_file/2022-07-03_09-00-00.txt'
 
-        ''' Create Geometry and Mesh'''
+        #Create Geometry and Mesh
         geom = mt.createWorld(start=[0, 0], end=[47, -8], worldMarker=False)
         mesh = mt.createMesh(geom, quality=33.5, area=0.5, smooth=True)
         mesh.save("mesh.bms")
 
 
-        ''' Begin Inversion '''
+        # Inversion preparing 
         date = os.path.basename(file_to_convert)  # Extract the file name from the path
         mgr = ert.ERTManager(file_to_convert, verbose=True, debug=True)
         rhoa = np.array(mgr.data['rhoa'])
@@ -317,24 +344,24 @@ class Ui_MainWindow(object):
         pg.info('Filtered rhoa (min/max)', min(mgr.data['rhoa']), max(mgr.data['rhoa']))
         Accur = (1 - np.shape(Argw)[0] / np.shape(rhoa)[0]) * 100
 
-        ''' Filter negative value '''
+        # Data processing Filter negative value
         mgr.data.remove(mgr.data["rhoa"] < 0)
 
-        ''' Add estimated Error and geometrical factor'''
+        # Add estimated Error and geometrical factor
         mgr.data['err'] = ert.estimateError(mgr.data, absoluteError=0.001, relativeError=0.03)
         pg.info('Filtered rhoa (min/max)', min(mgr.data['rhoa']), max(mgr.data['rhoa']))
         mgr.data['k'] = ert.createGeometricFactors(mgr.data, numerical=True)
         #ert.show(mgr.data)
 
-        '''Inversion '''
+        # Inversion here
         inv = mgr.invert(mesh=mesh, lam=lam, maxIter=6, dPhi=2, CHI1OPT=5, Verbose=True)
 
-        '''Storing and saving data for later manipulation'''
+        # Storing and saving data for later manipulation
         Storage = np.zeros([np.shape(mesh.cellMarkers())[0], 1])
         Storage[:, 0] = inv
         mgr.saveResult(date[:-4])
 
-        '''Plotting'''
+        # Plotting
         fig1, (ax1) = plt.subplots(1, sharex=True, figsize=(16.0, 5))
         mgr.showResult(ax=ax1, cMin=50, cMax=15000)
         labels = date
@@ -343,7 +370,13 @@ class Ui_MainWindow(object):
         ax1.set_title(labels)
         plt.tight_layout()
 
-        plt.show()
+        #plt.show()
+        # 将图形嵌入到 QWidget 中
+        self.canvas = FigureCanvas(fig1)  # 使用 FigureCanvas 来显示 Matplotlib 图形
+        self.inversion_result_layout.addWidget(self.canvas)  # 将图形添加到布局中
+
+        # 刷新显示
+        self.inversion_result_widget.update()
 
 
     def retranslateUi(self, MainWindow):
@@ -392,17 +425,17 @@ class Ui_MainWindow(object):
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:9pt;\">Max Iterations</span></p></body></html>"))
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:12pt;\">Iterations</span></p></body></html>"))
         self.textEdit_9.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:9pt;\">Lambda</span></p></body></html>"))
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:12pt;\">Lambda</span></p></body></html>"))
         self.textEdit_10.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:9pt;\">dPhi</span></p></body></html>"))
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:12pt;\">dPhi</span></p></body></html>"))
         self.pushButton_5.setText(_translate("MainWindow", "Apply"))
         self.pushButton_9.setText(_translate("MainWindow", "Save"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.Inversion), _translate("MainWindow", "Inversion"))
