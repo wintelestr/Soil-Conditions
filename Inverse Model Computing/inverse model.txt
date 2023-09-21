@@ -1,1 +1,638 @@
+Below is the result of test after run the inversion_test.py:
 
+Because the verbose is selected so there are many illustrations but in the very end it shows:
+
+----------------------------------------------------------------------
+Ran 2 tests in 61.292s
+
+OK
+
+So this is saying the code passed the tests
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+(pg) macdeMacBook-Pro:Soil-Conditions mac$ /opt/anaconda3/envs/pg/bin/python "/Users/mac/Desktop/MITUWA/Third_semester/Capstone/Soil-Conditions/Initial Prototype/inversion_test.py"
+Data validity check: found 2 invalid data. 
+Data validity check: remove invalid data.
+21/09/23 - 12:00:47 - pyGIMLi - INFO - Filtered rhoa (min/max) 57.547 5954.279
+21/09/23 - 12:00:47 - pyGIMLi - INFO - Filtered rhoa (min/max) 57.547 5954.279
+21/09/23 - 12:00:47 - pyGIMLi - INFO - Cache /opt/anaconda3/envs/pg/lib/python3.11/site-packages/pygimli/physics/ert/ert.py:createGeometricFactors restored (4.5s x 27): /Users/mac/Library/Caches/pygimli/8219232541371449309
+21/09/23 - 12:00:47 - pyGIMLi - INFO - Found 1 regions.
+21/09/23 - 12:00:47 - pyGIMLi - INFO - Creating forward mesh from region infos.
+21/09/23 - 12:00:47 - pyGIMLi - INFO - Creating refined mesh (H2) to solve forward task.
+21/09/23 - 12:00:47 - pyGIMLi - INFO - Mesh for forward task: Mesh: Nodes: 2826 Cells: 5396 Boundaries: 4174
+ModellingBase::setMesh() copying new mesh ... Found Neumann domain. Setting topography=1.
+Found Neumann domain. but 2.5D -> neumann: false
+Found datafile: 48 electrodes
+Found: 48 free-electrodes
+rMin = 0.5, rMax = 94
+NGauLeg + NGauLag for inverse Fouriertransformation: 13 + 4
+Found non-Neumann domain
+0.0224954 s
+FOP updating mesh dependencies ... 4.946e-06 s
+min/max(dweight) = 33.314/33.3331
+21/09/23 - 12:00:47 - pyGIMLi - INFO - Use median(data values)=1093.946
+21/09/23 - 12:00:47 - pyGIMLi - INFO - Created startmodel from forward operator: 1349 [1093.946,...,1093.946]
+21/09/23 - 12:00:47 - pyGIMLi - INFO - Starting inversion.
+fop: <pygimli.physics.ert.ertModelling.ERTModelling object at 0x116ccdbc0>
+Data transformation: <pgcore._pygimli_.RTransLogLU object at 0x116cce020>
+Model transformation: <pgcore._pygimli_.RTransLog object at 0x116ccdd00>
+min/max (data): 57.55/5954
+min/max (error): 3%/3%
+min/max (start model): 1094/1094
+--------------------------------------------------------------------------------
+Calculating response for model: min = 1093.95 max = 1093.95
+Allocating memory for primary potential...... 0.0125255
+
+No primary potential for secondary field calculation with topography.
+Creating P2-Primmesh:           Nodes: 11047    Cells: 5396     Boundaries: 8221
+ModellingBase::setMesh() copying new mesh ... Found Neumann domain. Setting topography=1.
+Found Neumann domain. but 2.5D -> neumann: false
+Found datafile: 48 electrodes
+Found: 48 free-electrodes
+rMin = 0.5, rMax = 94
+NGauLeg + NGauLag for inverse Fouriertransformation: 13 + 4
+Found non-Neumann domain
+0.101553 s
+FOP updating mesh dependencies ... 3.033e-06 s
+Forward: time: 3.65344s
+Interpolating to secondary mesh
+
+816     / 816
+Forward: time: 5.85429s
+Response: min = 362.655 max = 4346.36 mean = 1238.88
+Reciprocity rms(modelReciprocity) 3.3004%, max: 51.0292%
+min/max(dweight) = 33.314/33.3331
+Building constraints matrix
+constraint matrix of size(nBounds x nModel) 1960 x 1349
+check Jacobian: wrong dimensions: (0x0) should be (907x1349)  force: 1
+jacobian size invalid, forced recalc: 1
+calculating jacobian matrix (forced=1)...Using existing subpotentials for createJacobian.
+S(8/8-std::mt): 0.0128211:time: 2.12895s
+sens sum: median = 0.972278 min = 0.324118 max = 3.97378
+... 2.13595 s
+C size: 1349 x 1960
+min data = 57.547 max data = 5954.28 (907)
+min error = 0.0300002 max error = 0.0300174 (907)
+min response = 363.977 max response = 4346.31 (907)
+calc without reference model
+0: rms/rrms(data, response) = 1363.07/468.795%
+0: chi^2(data, response, error, log) = 1399.15
+0: Phi = 1.26903e+06 + 0 * 5 = 1.26903e+06
+--------------------------------------------------------------------------------
+min model:  = 1093.95 max model:  = 1093.95 (1349)
+min data = 57.547 max data = 5954.28 (907)
+min dW = 33.314 max dW = 33.3331 (907)
+min dd = -3.75189 max dd = 1.65842 (907)
+min dm = 0 max dm = 0 (1349)
+min cW = 1 max cW = 1 (1960)
+min mW = 1 max mW = 1 (1349)
+min mod = 1093.95 max mod = 1093.95 (1349)
+min resp = 363.977 max resp = 4346.31 (907)
+min dtD = 0.00023008 max dtD = 0.00274743 (907)
+min dtM = 0.000914122 max dtM = 0.000914122 (1349)
+min constraintsH = ndef. max constraintsH = ndef.
+solve CGLSCDWWtrans with lambda = 5
+[ 200/14.5255]06min dm = -15.5343 max dm = 3.94567 (1349)
+Calculating response for model: min = 0.000196133 max = 56568.9
+Using existing primary potentials.
+Forward: time: 0.562251s
+Response: min = 51.0868 max = 7211.14 mean = 1607.68
+Reciprocity rms(modelReciprocity) 6.53962%, max: 121.595%
+Linesearch tau = 0.96
+1: Model: min = 0.000196133; max = 56568.9
+1: Response: min = 51.0979; max = 7174.46
+1: rms/rrms(data, Response) = 1014.24/243.627%
+1: chi^2(data, Response, error, log) = 661.718
+1: Phi = 600178+1886.03*5=609609
+inv.iter 1 ... chi² = 661.72 (dPhi = 51.96%) lam: 5
+--------------------------------------------------------------------------------
+calculating jacobian matrix (forced=1)...Using existing subpotentials for createJacobian.
+S(8/8-std::mt): 0.00299218:time: 2.23112s
+sens sum: median = 4.40467 min = -27849.1 max = 51768.6
+... 2.23806 s
+min model:  = 0.000196133 max model:  = 56568.9 (1349)
+min data = 57.547 max data = 5954.28 (907)
+min dW = 33.314 max dW = 33.3331 (907)
+min dd = -2.77676 max dd = 0.976183 (907)
+min dm = -0 max dm = -0 (1349)
+min cW = 1 max cW = 1 (1960)
+min mW = 1 max mW = 1 (1349)
+min mod = 0.000196133 max mod = 56568.9 (1349)
+min resp = 51.0979 max resp = 7174.46 (907)
+min dtD = 0.000139383 max dtD = 0.0195703 (907)
+min dtM = 1.76775e-05 max dtM = 5098.58 (1349)
+min constraintsH = ndef. max constraintsH = ndef.
+solve CGLSCDWWtrans with lambda = 5
+[ 200/1848.05]06min dm = -6.50727 max dm = 10.5476 (1349)
+Calculating response for model: min = 0.00363815 max = 44738.1
+Using existing primary potentials.
+Forward: time: 0.49078s
+Response: min = 61.6814 max = 5651.82 mean = 1158.33
+Reciprocity rms(modelReciprocity) 17.2351%, max: 462.893%
+2: LS newModel: min = 0.00363815; max = 44738.1
+2: LS newResponse: min = 77.4323; max = 5938.86
+2: rms/rrms(data, LS newResponse) = 553.153/197.528%
+2: chi^2(data, LS newResponse, error, log) = 460.776
+2: Phi = 417924+813.47*5=421991
+Linesearch tau = 0.67
+Calculating response for model: min = 0.00138782 max = 23054.9
+Using existing primary potentials.
+Forward: time: 0.505389s
+Response: min = 45.1811 max = 5905.5 mean = 1192.83
+Reciprocity rms(modelReciprocity) 7.36545%, max: 153.707%
+2: Model: min = 0.00138782; max = 23054.9
+2: Response: min = 48.1394; max = 6253.38
+2: rms/rrms(data, Response) = 361.907/31.9028%
+2: chi^2(data, Response, error, log) = 90.9123
+2: Phi = 82457.4+755.328*5=86234.1
+inv.iter 2 ... chi² = 90.91 (dPhi = 85.85%) lam: 5.0
+--------------------------------------------------------------------------------
+calculating jacobian matrix (forced=1)...Using existing subpotentials for createJacobian.
+S(8/8-std::mt): 0.00155877:time: 2.25109s
+sens sum: median = 0.554698 min = -490.556 max = 896.952
+... 2.25832 s
+min model:  = 0.00138782 max model:  = 23054.9 (1349)
+min data = 57.547 max data = 5954.28 (907)
+min dW = 33.314 max dW = 33.3331 (907)
+min dd = -1.11923 max dd = 0.941536 (907)
+min dm = 0 max dm = 0 (1349)
+min cW = 1 max cW = 1 (1960)
+min mW = 1 max mW = 1 (1349)
+min mod = 0.00138782 max mod = 23054.9 (1349)
+min resp = 48.1394 max resp = 6253.38 (907)
+min dtD = 0.000159913 max dtD = 0.020773 (907)
+min dtM = 4.33747e-05 max dtM = 720.557 (1349)
+min constraintsH = ndef. max constraintsH = ndef.
+solve CGLSCDWWtrans with lambda = 5
+[ 200/2853.99]6]min dm = -4.78711 max dm = 9.73834 (1349)
+Calculating response for model: min = 0.0130463 max = 18755.4
+Using existing primary potentials.
+Forward: time: 0.50641s
+Response: min = 4.94117 max = 5897.97 mean = 1268.33
+Reciprocity rms(modelReciprocity) 8.43522%, max: 158.124%
+3: LS newModel: min = 0.0130463; max = 18755.4
+3: LS newResponse: min = 5.94448; max = 5367.57
+3: rms/rrms(data, LS newResponse) = 278.049/40.8026%
+3: chi^2(data, LS newResponse, error, log) = 152.159
+3: Phi = 138008+530.77*5=140662
+Linesearch tau = 0.36
+Calculating response for model: min = 0.0391522 max = 15812.7
+Using existing primary potentials.
+Forward: time: 0.505073s
+Response: min = 31.9735 max = 5553.54 mean = 1236.02
+Reciprocity rms(modelReciprocity) 7.19456%, max: 152.681%
+3: Model: min = 0.0391522; max = 15812.7
+3: Response: min = 35.0373; max = 5711.82
+3: rms/rrms(data, Response) = 272.853/21.0811%
+3: chi^2(data, Response, error, log) = 45.0734
+3: Phi = 40881.6+559.342*5=43678.3
+inv.iter 3 ... chi² = 45.07 (dPhi = 49.35%) lam: 5.0
+--------------------------------------------------------------------------------
+calculating jacobian matrix (forced=1)...Using existing subpotentials for createJacobian.
+S(8/8-std::mt): 0.00156708:time: 2.43174s
+sens sum: median = 1.61162 min = -217.102 max = 524.656
+... 2.43893 s
+min model:  = 0.0391522 max model:  = 15812.7 (1349)
+min data = 57.547 max data = 5954.28 (907)
+min dW = 33.314 max dW = 33.3331 (907)
+min dd = -1.09455 max dd = 0.767343 (907)
+min dm = 0 max dm = 0 (1349)
+min cW = 1 max cW = 1 (1960)
+min mW = 1 max mW = 1 (1349)
+min mod = 0.0391522 max mod = 15812.7 (1349)
+min resp = 35.0373 max resp = 5711.82 (907)
+min dtD = 0.000175075 max dtD = 0.028541 (907)
+min dtM = 6.32405e-05 max dtM = 25.5414 (1349)
+min constraintsH = ndef. max constraintsH = ndef.
+solve CGLSCDWWtrans with lambda = 5
+[ 200/70.5158]6]min dm = -3.43312 max dm = 3.47333 (1349)
+Calculating response for model: min = 0.00455791 max = 19671.9
+Using existing primary potentials.
+Forward: time: 0.519598s
+Response: min = 24.9603 max = 6882.51 mean = 1343.41
+Reciprocity rms(modelReciprocity) 8.03895%, max: 170.036%
+4: LS newModel: min = 0.00455791; max = 19671.9
+4: LS newResponse: min = 27.2582; max = 5548.02
+4: rms/rrms(data, LS newResponse) = 136.572/13.9751%
+4: chi^2(data, LS newResponse, error, log) = 22.603
+4: Phi = 20500.9+577.835*5=23390.1
+Linesearch tau = 0.84
+Calculating response for model: min = 0.00789447 max = 18996.4
+Using existing primary potentials.
+Forward: time: 0.517856s
+Response: min = 28.4865 max = 6671.54 mean = 1329.39
+Reciprocity rms(modelReciprocity) 7.82847%, max: 165.855%
+4: Model: min = 0.00789447; max = 18996.4
+4: Response: min = 31.647; max = 5506.78
+4: rms/rrms(data, Response) = 141.01/13.5056%
+4: chi^2(data, Response, error, log) = 19.4177
+4: Phi = 17611.8+552.356*5=20373.6
+inv.iter 4 ... chi² = 19.42 (dPhi = 53.36%) lam: 5.0
+--------------------------------------------------------------------------------
+calculating jacobian matrix (forced=1)...Using existing subpotentials for createJacobian.
+S(8/8-std::mt): 0.00169434:time: 2.46777s
+sens sum: median = -0.0827779 min = -731.144 max = 1583.83
+... 2.47509 s
+min model:  = 0.00789447 max model:  = 18996.4 (1349)
+min data = 57.547 max data = 5954.28 (907)
+min dW = 33.314 max dW = 33.3331 (907)
+min dd = -0.948164 max dd = 0.927586 (907)
+min dm = 0 max dm = 0 (1349)
+min cW = 1 max cW = 1 (1960)
+min mW = 1 max mW = 1 (1349)
+min mod = 0.00789447 max mod = 18996.4 (1349)
+min resp = 31.647 max resp = 5506.78 (907)
+min dtD = 0.000181594 max dtD = 0.0315986 (907)
+min dtM = 5.26414e-05 max dtM = 126.671 (1349)
+min constraintsH = ndef. max constraintsH = ndef.
+solve CGLSCDWWtrans with lambda = 5
+[ 200/9.2768]]6]min dm = -1.62326 max dm = 1.63149 (1349)
+Calculating response for model: min = 0.00185108 max = 24000.2
+Using existing primary potentials.
+Forward: time: 0.517999s
+Response: min = 45.5376 max = 5690.19 mean = 1361.1
+Reciprocity rms(modelReciprocity) 7.34919%, max: 163.681%
+5: LS newModel: min = 0.00185108; max = 24000.2
+5: LS newResponse: min = 50.0663; max = 5715.46
+5: rms/rrms(data, LS newResponse) = 113.954/11.5065%
+5: chi^2(data, LS newResponse, error, log) = 13.2138
+5: Phi = 11985+522.343*5=14596.7
+Linesearch tau = 0.85
+Calculating response for model: min = 0.00230097 max = 23173.1
+Using existing primary potentials.
+Forward: time: 0.514251s
+Response: min = 42.7261 max = 5678.71 mean = 1358.64
+Reciprocity rms(modelReciprocity) 7.35395%, max: 163.802%
+5: Model: min = 0.00230097; max = 23173.1
+5: Response: min = 47.082; max = 5641.51
+5: rms/rrms(data, Response) = 111.005/11.3056%
+5: chi^2(data, Response, error, log) = 12.5224
+5: Phi = 11357.8+517.164*5=13943.7
+inv.iter 5 ... chi² = 12.52 (dPhi = 31.56%) lam: 5.0
+--------------------------------------------------------------------------------
+calculating jacobian matrix (forced=1)...Using existing subpotentials for createJacobian.
+S(8/8-std::mt): 0.00174824:time: 2.43812s
+sens sum: median = -2.80579 min = -1193.39 max = 2560.36
+... 2.44498 s
+min model:  = 0.00230097 max model:  = 23173.1 (1349)
+min data = 57.547 max data = 5954.28 (907)
+min dW = 33.314 max dW = 33.3331 (907)
+min dd = -0.974306 max dd = 0.961851 (907)
+min dm = -0 max dm = -0 (1349)
+min cW = 1 max cW = 1 (1960)
+min mW = 1 max mW = 1 (1349)
+min mod = 0.00230097 max mod = 23173.1 (1349)
+min resp = 47.082 max resp = 5641.51 (907)
+min dtD = 0.000177258 max dtD = 0.0212396 (907)
+min dtM = 4.31535e-05 max dtM = 434.6 (1349)
+min constraintsH = ndef. max constraintsH = ndef.
+solve CGLSCDWWtrans with lambda = 5
+[ 200/11.4277]6]min dm = -2.32361 max dm = 2.36575 (1349)
+Calculating response for model: min = 0.00378264 max = 25861.7
+Using existing primary potentials.
+Forward: time: 0.478717s
+Response: min = 25.4079 max = 6540.4 mean = 1375.45
+Reciprocity rms(modelReciprocity) 8.7239%, max: 199.952%
+6: LS newModel: min = 0.00378264; max = 25861.7
+6: LS newResponse: min = 28.232; max = 5795.03
+6: rms/rrms(data, LS newResponse) = 113.689/14.3422%
+6: chi^2(data, LS newResponse, error, log) = 35.2777
+6: Phi = 31996.9+546.694*5=34730.4
+Linesearch tau = 0.08
+Calculating response for model: min = 0.00278039 max = 23377.5
+Using existing primary potentials.
+Forward: time: 0.490202s
+Response: min = 43.1265 max = 5687.87 mean = 1360.48
+Reciprocity rms(modelReciprocity) 7.4306%, max: 166.325%
+6: Model: min = 0.00278039; max = 23377.5
+6: Response: min = 47.5279; max = 5650.92
+6: rms/rrms(data, Response) = 109.154/11.2073%
+6: chi^2(data, Response, error, log) = 12.2144
+6: Phi = 11078.5+515.713*5=13657
+inv.iter 6 ... chi² = 12.21 (dPhi = 2.06%) lam: 5.0
+Path 2022-07-03_09-00-00/ERTManager already exists. Skipping
+21/09/23 - 12:01:15 - pyGIMLi - INFO - Saving inversion results to: 2022-07-03_09-00-00/ERTManager
+/opt/anaconda3/envs/pg/lib/python3.11/site-packages/pygimli/viewer/mpl/colorbar.py:103: MatplotlibDeprecationWarning: The get_cmap function was deprecated in Matplotlib 3.7 and will be removed two minor releases later. Use ``matplotlib.colormaps[name]`` or ``matplotlib.colormaps.get_cmap(obj)`` instead.
+  cMap = copy.copy(mpl.cm.get_cmap(cMapName, ncols))
+/opt/anaconda3/envs/pg/lib/python3.11/site-packages/pygimli/viewer/mpl/colorbar.py:464: MatplotlibDeprecationWarning: The draw_all function was deprecated in Matplotlib 3.6 and will be removed two minor releases later. Use fig.draw_without_rendering() instead.
+  cbar.draw_all()
+/opt/anaconda3/envs/pg/lib/python3.11/site-packages/pygimli/viewer/mpl/colorbar.py:103: MatplotlibDeprecationWarning: The get_cmap function was deprecated in Matplotlib 3.7 and will be removed two minor releases later. Use ``matplotlib.colormaps[name]`` or ``matplotlib.colormaps.get_cmap(obj)`` instead.
+  cMap = copy.copy(mpl.cm.get_cmap(cMapName, ncols))
+/opt/anaconda3/envs/pg/lib/python3.11/site-packages/pygimli/viewer/mpl/colorbar.py:464: MatplotlibDeprecationWarning: The draw_all function was deprecated in Matplotlib 3.6 and will be removed two minor releases later. Use fig.draw_without_rendering() instead.
+  cbar.draw_all()
+.Data validity check: found 2 invalid data. 
+Data validity check: remove invalid data.
+21/09/23 - 12:01:17 - pyGIMLi - INFO - Filtered rhoa (min/max) 57.547 5954.279
+21/09/23 - 12:01:17 - pyGIMLi - INFO - Filtered rhoa (min/max) 57.547 5954.279
+21/09/23 - 12:01:17 - pyGIMLi - INFO - Cache /opt/anaconda3/envs/pg/lib/python3.11/site-packages/pygimli/physics/ert/ert.py:createGeometricFactors restored (4.5s x 28): /Users/mac/Library/Caches/pygimli/8219232541371449309
+21/09/23 - 12:01:17 - pyGIMLi - INFO - Found 1 regions.
+21/09/23 - 12:01:17 - pyGIMLi - INFO - Creating forward mesh from region infos.
+21/09/23 - 12:01:17 - pyGIMLi - INFO - Creating refined mesh (H2) to solve forward task.
+21/09/23 - 12:01:17 - pyGIMLi - INFO - Mesh for forward task: Mesh: Nodes: 2826 Cells: 5396 Boundaries: 4174
+ModellingBase::setMesh() copying new mesh ... Found Neumann domain. Setting topography=1.
+Found Neumann domain. but 2.5D -> neumann: false
+Found datafile: 48 electrodes
+Found: 48 free-electrodes
+rMin = 0.5, rMax = 94
+NGauLeg + NGauLag for inverse Fouriertransformation: 13 + 4
+Found non-Neumann domain
+0.0189682 s
+FOP updating mesh dependencies ... 2.849e-06 s
+min/max(dweight) = 33.314/33.3331
+21/09/23 - 12:01:17 - pyGIMLi - INFO - Use median(data values)=1093.946
+21/09/23 - 12:01:17 - pyGIMLi - INFO - Created startmodel from forward operator: 1349 [1093.946,...,1093.946]
+21/09/23 - 12:01:17 - pyGIMLi - INFO - Starting inversion.
+fop: <pygimli.physics.ert.ertModelling.ERTModelling object at 0x160a55cb0>
+Data transformation: <pgcore._pygimli_.RTransLogLU object at 0x10c2541d0>
+Model transformation: <pgcore._pygimli_.RTransLog object at 0x160a55080>
+min/max (data): 57.55/5954
+min/max (error): 3%/3%
+min/max (start model): 1094/1094
+--------------------------------------------------------------------------------
+Calculating response for model: min = 1093.95 max = 1093.95
+Allocating memory for primary potential...... 0.00900811
+
+No primary potential for secondary field calculation with topography.
+Creating P2-Primmesh:           Nodes: 11047    Cells: 5396     Boundaries: 8221
+ModellingBase::setMesh() copying new mesh ... Found Neumann domain. Setting topography=1.
+Found Neumann domain. but 2.5D -> neumann: false
+Found datafile: 48 electrodes
+Found: 48 free-electrodes
+rMin = 0.5, rMax = 94
+NGauLeg + NGauLag for inverse Fouriertransformation: 13 + 4
+Found non-Neumann domain
+0.0521743 s
+FOP updating mesh dependencies ... 2.784e-06 s
+Forward: time: 3.61184s
+Interpolating to secondary mesh
+
+816     / 816
+Forward: time: 5.8741s
+Response: min = 362.655 max = 4346.36 mean = 1238.88
+Reciprocity rms(modelReciprocity) 3.3004%, max: 51.0292%
+min/max(dweight) = 33.314/33.3331
+Building constraints matrix
+constraint matrix of size(nBounds x nModel) 1960 x 1349
+check Jacobian: wrong dimensions: (0x0) should be (907x1349)  force: 1
+jacobian size invalid, forced recalc: 1
+calculating jacobian matrix (forced=1)...Using existing subpotentials for createJacobian.
+S(8/8-std::mt): 0.0118959:time: 2.27171s
+sens sum: median = 0.972278 min = 0.324118 max = 3.97378
+... 2.27858 s
+C size: 1349 x 1960
+min data = 57.547 max data = 5954.28 (907)
+min error = 0.0300002 max error = 0.0300174 (907)
+min response = 363.977 max response = 4346.31 (907)
+calc without reference model
+0: rms/rrms(data, response) = 1363.07/468.795%
+0: chi^2(data, response, error, log) = 1399.15
+0: Phi = 1.26903e+06 + 0 * 5 = 1.26903e+06
+--------------------------------------------------------------------------------
+min model:  = 1093.95 max model:  = 1093.95 (1349)
+min data = 57.547 max data = 5954.28 (907)
+min dW = 33.314 max dW = 33.3331 (907)
+min dd = -3.75189 max dd = 1.65842 (907)
+min dm = 0 max dm = 0 (1349)
+min cW = 1 max cW = 1 (1960)
+min mW = 1 max mW = 1 (1349)
+min mod = 1093.95 max mod = 1093.95 (1349)
+min resp = 363.977 max resp = 4346.31 (907)
+min dtD = 0.00023008 max dtD = 0.00274743 (907)
+min dtM = 0.000914122 max dtM = 0.000914122 (1349)
+min constraintsH = ndef. max constraintsH = ndef.
+solve CGLSCDWWtrans with lambda = 5
+[ 200/14.5255]06min dm = -15.5343 max dm = 3.94567 (1349)
+Calculating response for model: min = 0.000196133 max = 56568.9
+Using existing primary potentials.
+Forward: time: 0.49165s
+Response: min = 51.0868 max = 7211.14 mean = 1607.68
+Reciprocity rms(modelReciprocity) 6.53962%, max: 121.595%
+Linesearch tau = 0.96
+1: Model: min = 0.000196133; max = 56568.9
+1: Response: min = 51.0979; max = 7174.46
+1: rms/rrms(data, Response) = 1014.24/243.627%
+1: chi^2(data, Response, error, log) = 661.718
+1: Phi = 600178+1886.03*5=609609
+inv.iter 1 ... chi² = 661.72 (dPhi = 51.96%) lam: 5
+--------------------------------------------------------------------------------
+calculating jacobian matrix (forced=1)...Using existing subpotentials for createJacobian.
+S(8/8-std::mt): 0.00168833:time: 2.3758s
+sens sum: median = 4.40467 min = -27849.1 max = 51768.6
+... 2.38326 s
+min model:  = 0.000196133 max model:  = 56568.9 (1349)
+min data = 57.547 max data = 5954.28 (907)
+min dW = 33.314 max dW = 33.3331 (907)
+min dd = -2.77676 max dd = 0.976183 (907)
+min dm = -0 max dm = -0 (1349)
+min cW = 1 max cW = 1 (1960)
+min mW = 1 max mW = 1 (1349)
+min mod = 0.000196133 max mod = 56568.9 (1349)
+min resp = 51.0979 max resp = 7174.46 (907)
+min dtD = 0.000139383 max dtD = 0.0195703 (907)
+min dtM = 1.76775e-05 max dtM = 5098.58 (1349)
+min constraintsH = ndef. max constraintsH = ndef.
+solve CGLSCDWWtrans with lambda = 5
+[ 200/1848.05]06min dm = -6.50727 max dm = 10.5476 (1349)
+Calculating response for model: min = 0.00363815 max = 44738.1
+Using existing primary potentials.
+Forward: time: 0.484268s
+Response: min = 61.6814 max = 5651.82 mean = 1158.33
+Reciprocity rms(modelReciprocity) 17.2351%, max: 462.893%
+2: LS newModel: min = 0.00363815; max = 44738.1
+2: LS newResponse: min = 77.4323; max = 5938.86
+2: rms/rrms(data, LS newResponse) = 553.153/197.528%
+2: chi^2(data, LS newResponse, error, log) = 460.776
+2: Phi = 417924+813.47*5=421991
+Linesearch tau = 0.67
+Calculating response for model: min = 0.00138782 max = 23054.9
+Using existing primary potentials.
+Forward: time: 0.488097s
+Response: min = 45.1811 max = 5905.5 mean = 1192.83
+Reciprocity rms(modelReciprocity) 7.36545%, max: 153.707%
+2: Model: min = 0.00138782; max = 23054.9
+2: Response: min = 48.1394; max = 6253.38
+2: rms/rrms(data, Response) = 361.907/31.9028%
+2: chi^2(data, Response, error, log) = 90.9123
+2: Phi = 82457.4+755.328*5=86234.1
+inv.iter 2 ... chi² = 90.91 (dPhi = 85.85%) lam: 5.0
+--------------------------------------------------------------------------------
+calculating jacobian matrix (forced=1)...Using existing subpotentials for createJacobian.
+S(8/8-std::mt): 0.00158109:time: 2.44939s
+sens sum: median = 0.554698 min = -490.556 max = 896.952
+... 2.45626 s
+min model:  = 0.00138782 max model:  = 23054.9 (1349)
+min data = 57.547 max data = 5954.28 (907)
+min dW = 33.314 max dW = 33.3331 (907)
+min dd = -1.11923 max dd = 0.941536 (907)
+min dm = 0 max dm = 0 (1349)
+min cW = 1 max cW = 1 (1960)
+min mW = 1 max mW = 1 (1349)
+min mod = 0.00138782 max mod = 23054.9 (1349)
+min resp = 48.1394 max resp = 6253.38 (907)
+min dtD = 0.000159913 max dtD = 0.020773 (907)
+min dtM = 4.33747e-05 max dtM = 720.557 (1349)
+min constraintsH = ndef. max constraintsH = ndef.
+solve CGLSCDWWtrans with lambda = 5
+[ 200/2853.99]6]min dm = -4.78711 max dm = 9.73834 (1349)
+Calculating response for model: min = 0.0130463 max = 18755.4
+Using existing primary potentials.
+Forward: time: 0.49361s
+Response: min = 4.94117 max = 5897.97 mean = 1268.33
+Reciprocity rms(modelReciprocity) 8.43522%, max: 158.124%
+3: LS newModel: min = 0.0130463; max = 18755.4
+3: LS newResponse: min = 5.94448; max = 5367.57
+3: rms/rrms(data, LS newResponse) = 278.049/40.8026%
+3: chi^2(data, LS newResponse, error, log) = 152.159
+3: Phi = 138008+530.77*5=140662
+Linesearch tau = 0.36
+Calculating response for model: min = 0.0391522 max = 15812.7
+Using existing primary potentials.
+Forward: time: 0.496004s
+Response: min = 31.9735 max = 5553.54 mean = 1236.02
+Reciprocity rms(modelReciprocity) 7.19456%, max: 152.681%
+3: Model: min = 0.0391522; max = 15812.7
+3: Response: min = 35.0373; max = 5711.82
+3: rms/rrms(data, Response) = 272.853/21.0811%
+3: chi^2(data, Response, error, log) = 45.0734
+3: Phi = 40881.6+559.342*5=43678.3
+inv.iter 3 ... chi² = 45.07 (dPhi = 49.35%) lam: 5.0
+--------------------------------------------------------------------------------
+calculating jacobian matrix (forced=1)...Using existing subpotentials for createJacobian.
+S(8/8-std::mt): 0.00231894:time: 2.39117s
+sens sum: median = 1.61162 min = -217.102 max = 524.656
+... 2.3985 s
+min model:  = 0.0391522 max model:  = 15812.7 (1349)
+min data = 57.547 max data = 5954.28 (907)
+min dW = 33.314 max dW = 33.3331 (907)
+min dd = -1.09455 max dd = 0.767343 (907)
+min dm = 0 max dm = 0 (1349)
+min cW = 1 max cW = 1 (1960)
+min mW = 1 max mW = 1 (1349)
+min mod = 0.0391522 max mod = 15812.7 (1349)
+min resp = 35.0373 max resp = 5711.82 (907)
+min dtD = 0.000175075 max dtD = 0.028541 (907)
+min dtM = 6.32405e-05 max dtM = 25.5414 (1349)
+min constraintsH = ndef. max constraintsH = ndef.
+solve CGLSCDWWtrans with lambda = 5
+[ 200/70.5158]6]min dm = -3.43312 max dm = 3.47333 (1349)
+Calculating response for model: min = 0.00455791 max = 19671.9
+Using existing primary potentials.
+Forward: time: 0.512108s
+Response: min = 24.9603 max = 6882.51 mean = 1343.41
+Reciprocity rms(modelReciprocity) 8.03895%, max: 170.036%
+4: LS newModel: min = 0.00455791; max = 19671.9
+4: LS newResponse: min = 27.2582; max = 5548.02
+4: rms/rrms(data, LS newResponse) = 136.572/13.9751%
+4: chi^2(data, LS newResponse, error, log) = 22.603
+4: Phi = 20500.9+577.835*5=23390.1
+Linesearch tau = 0.84
+Calculating response for model: min = 0.00789447 max = 18996.4
+Using existing primary potentials.
+Forward: time: 0.507396s
+Response: min = 28.4865 max = 6671.54 mean = 1329.39
+Reciprocity rms(modelReciprocity) 7.82847%, max: 165.855%
+4: Model: min = 0.00789447; max = 18996.4
+4: Response: min = 31.647; max = 5506.78
+4: rms/rrms(data, Response) = 141.01/13.5056%
+4: chi^2(data, Response, error, log) = 19.4177
+4: Phi = 17611.8+552.356*5=20373.6
+inv.iter 4 ... chi² = 19.42 (dPhi = 53.36%) lam: 5.0
+--------------------------------------------------------------------------------
+calculating jacobian matrix (forced=1)...Using existing subpotentials for createJacobian.
+S(8/8-std::mt): 0.00180142:time: 2.82274s
+sens sum: median = -0.0827779 min = -731.144 max = 1583.83
+... 2.82991 s
+min model:  = 0.00789447 max model:  = 18996.4 (1349)
+min data = 57.547 max data = 5954.28 (907)
+min dW = 33.314 max dW = 33.3331 (907)
+min dd = -0.948164 max dd = 0.927586 (907)
+min dm = 0 max dm = 0 (1349)
+min cW = 1 max cW = 1 (1960)
+min mW = 1 max mW = 1 (1349)
+min mod = 0.00789447 max mod = 18996.4 (1349)
+min resp = 31.647 max resp = 5506.78 (907)
+min dtD = 0.000181594 max dtD = 0.0315986 (907)
+min dtM = 5.26414e-05 max dtM = 126.671 (1349)
+min constraintsH = ndef. max constraintsH = ndef.
+solve CGLSCDWWtrans with lambda = 5
+[ 200/9.2768]]6]min dm = -1.62326 max dm = 1.63149 (1349)
+Calculating response for model: min = 0.00185108 max = 24000.2
+Using existing primary potentials.
+Forward: time: 0.503948s
+Response: min = 45.5376 max = 5690.19 mean = 1361.1
+Reciprocity rms(modelReciprocity) 7.34919%, max: 163.681%
+5: LS newModel: min = 0.00185108; max = 24000.2
+5: LS newResponse: min = 50.0663; max = 5715.46
+5: rms/rrms(data, LS newResponse) = 113.954/11.5065%
+5: chi^2(data, LS newResponse, error, log) = 13.2138
+5: Phi = 11985+522.343*5=14596.7
+Linesearch tau = 0.85
+Calculating response for model: min = 0.00230097 max = 23173.1
+Using existing primary potentials.
+Forward: time: 0.600783s
+Response: min = 42.7261 max = 5678.71 mean = 1358.64
+Reciprocity rms(modelReciprocity) 7.35395%, max: 163.802%
+5: Model: min = 0.00230097; max = 23173.1
+5: Response: min = 47.082; max = 5641.51
+5: rms/rrms(data, Response) = 111.005/11.3056%
+5: chi^2(data, Response, error, log) = 12.5224
+5: Phi = 11357.8+517.164*5=13943.7
+inv.iter 5 ... chi² = 12.52 (dPhi = 31.56%) lam: 5.0
+--------------------------------------------------------------------------------
+calculating jacobian matrix (forced=1)...Using existing subpotentials for createJacobian.
+S(8/8-std::mt): 0.00135877:time: 2.85767s
+sens sum: median = -2.80579 min = -1193.39 max = 2560.36
+... 2.86543 s
+min model:  = 0.00230097 max model:  = 23173.1 (1349)
+min data = 57.547 max data = 5954.28 (907)
+min dW = 33.314 max dW = 33.3331 (907)
+min dd = -0.974306 max dd = 0.961851 (907)
+min dm = -0 max dm = -0 (1349)
+min cW = 1 max cW = 1 (1960)
+min mW = 1 max mW = 1 (1349)
+min mod = 0.00230097 max mod = 23173.1 (1349)
+min resp = 47.082 max resp = 5641.51 (907)
+min dtD = 0.000177258 max dtD = 0.0212396 (907)
+min dtM = 4.31535e-05 max dtM = 434.6 (1349)
+min constraintsH = ndef. max constraintsH = ndef.
+solve CGLSCDWWtrans with lambda = 5
+[ 200/11.4277]6]min dm = -2.32361 max dm = 2.36575 (1349)
+Calculating response for model: min = 0.00378264 max = 25861.7
+Using existing primary potentials.
+Forward: time: 0.582191s
+Response: min = 25.4079 max = 6540.4 mean = 1375.45
+Reciprocity rms(modelReciprocity) 8.7239%, max: 199.952%
+6: LS newModel: min = 0.00378264; max = 25861.7
+6: LS newResponse: min = 28.232; max = 5795.03
+6: rms/rrms(data, LS newResponse) = 113.689/14.3422%
+6: chi^2(data, LS newResponse, error, log) = 35.2777
+6: Phi = 31996.9+546.694*5=34730.4
+Linesearch tau = 0.08
+Calculating response for model: min = 0.00278039 max = 23377.5
+Using existing primary potentials.
+Forward: time: 0.527779s
+Response: min = 43.1265 max = 5687.87 mean = 1360.48
+Reciprocity rms(modelReciprocity) 7.4306%, max: 166.325%
+6: Model: min = 0.00278039; max = 23377.5
+6: Response: min = 47.5279; max = 5650.92
+6: rms/rrms(data, Response) = 109.154/11.2073%
+6: chi^2(data, Response, error, log) = 12.2144
+6: Phi = 11078.5+515.713*5=13657
+inv.iter 6 ... chi² = 12.21 (dPhi = 2.06%) lam: 5.0
+Path 2022-07-03_09-00-00/ERTManager already exists. Skipping
+21/09/23 - 12:01:47 - pyGIMLi - INFO - Saving inversion results to: 2022-07-03_09-00-00/ERTManager
+/opt/anaconda3/envs/pg/lib/python3.11/site-packages/pygimli/viewer/mpl/colorbar.py:103: MatplotlibDeprecationWarning: The get_cmap function was deprecated in Matplotlib 3.7 and will be removed two minor releases later. Use ``matplotlib.colormaps[name]`` or ``matplotlib.colormaps.get_cmap(obj)`` instead.
+  cMap = copy.copy(mpl.cm.get_cmap(cMapName, ncols))
+/opt/anaconda3/envs/pg/lib/python3.11/site-packages/pygimli/viewer/mpl/colorbar.py:464: MatplotlibDeprecationWarning: The draw_all function was deprecated in Matplotlib 3.6 and will be removed two minor releases later. Use fig.draw_without_rendering() instead.
+  cbar.draw_all()
+.
+----------------------------------------------------------------------
+Ran 2 tests in 61.292s
+
+OK
+21/09/23 - 12:01:48 - pyGIMLi - INFO - Showing pending widgets (QtAgg) on exit. Close all figures or Ctrl-C to quit the programm
+QGuiApplication::font(): no QGuiApplication instance and no application font set.
+QGuiApplication::font(): no QGuiApplication instance and no application font set.
+Segmentation fault: 11
+(pg) macdeMacBook-Pro:Soil-Conditions mac$ 
