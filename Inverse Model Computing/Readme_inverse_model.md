@@ -3,28 +3,40 @@ The Inversion window in this PyQt5-based application allows users to perform inv
 
 <img src="mainwindow_inversion.png" alt="Main Window of Inversion" width="300" height="200">
 
-
 ### Inversion Parameters
 In the Inversion window, users can configure the inversion process by specifying three essential parameters using spinboxes:
 
 #### 1. Maximum Iterations (MaxIter)
 Spinbox Name: Iterations - spinBox_8
+
 Description: This parameter controls the maximum number of iterations for the inversion algorithm. It determines how many times the algorithm will refine the model to achieve a better fit between the observed and predicted data.
+
 Range: Minimum value: 5, Maximum value: 30
+
 Usage: Adjust this parameter to control the trade-off between model accuracy and computation time. Higher values can lead to more accurate results but may require more time.
+
 #### 2. Lambda (λ)
 Spinbox Name: Lambda - spinBox_11
-Description: Lambda, denoted as λ, is the regularization parameter used in inversion algorithms. It helps prevent overfitting by penalizing complex models. Users can adjust this parameter to control the smoothness of the inverted model.
-Range: Minimum value: 5, Maximum value: 30
-Usage: Lambda is a critical parameter in inversion. Smaller values result in smoother models, while larger values may produce more detailed but noisy models. Finding the right balance is essential.
-#### 3. Delta Phi (dPhi)
-Spinbox Name: dPhi - spinBox_10
-Description: Delta Phi, denoted as dPhi, is another parameter used in inversion to control model smoothness. It determines the allowable change in resistivity between neighboring cells in the model.
-Range: Minimum value: 1, Maximum value: 10
-Usage: Smaller values of dPhi result in smoother models, while larger values allow for more abrupt changes in resistivity. Adjust this parameter based on the expected geological features in your study area.
-Applying Inversion
 
-### To apply inversion with the specified parameters, follow these steps:
+Description: Lambda, denoted as λ, is the regularization parameter used in inversion algorithms. It helps prevent overfitting by penalizing complex models. Users can adjust this parameter to control the smoothness of the inverted model.
+
+Range: Minimum value: 5, Maximum value: 30
+
+Usage: Lambda is a critical parameter in inversion. Smaller values result in smoother models, while larger values may produce more detailed but noisy models. Finding the right balance is essential.
+
+#### 3. Delta Phi (dPhi)
+
+Spinbox Name: dPhi - spinBox_10
+
+Description: Delta Phi, denoted as dPhi, is another parameter used in inversion to control model smoothness. It determines the allowable change in resistivity between neighboring cells in the model.
+
+Range: Minimum value: 1, Maximum value: 10
+
+Usage: Smaller values of dPhi result in smoother models, while larger values allow for more abrupt changes in resistivity. Adjust this parameter based on the expected geological features in your study area.
+
+### Applying Inversion
+
+To apply inversion with the specified parameters, follow these steps:
 
 Input your geophysical data by clicking the "Import" button in the "Data" tab and selecting the data file.
 
@@ -47,6 +59,7 @@ Remember that the choice of these parameters should be guided by the nature of y
 You can save the inversion results as image files for documentation or further analysis. Click the "Save" button in the "Inversion" tab, and a file dialog will prompt you to choose the save location and file format (e.g., PNG).
 
 <img src="inversion_save.png" alt="Main Window of Inversion" width="300" height="200">
+
 
 ### Additional Notes
 Ensure that you have imported valid geophysical data in the "Data" tab before proceeding with inversion.
