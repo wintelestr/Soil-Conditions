@@ -18,6 +18,7 @@ class Ui_MainWindow(object):
         MainWindow.resize(1256, 720)
         MainWindow.setAutoFillBackground(True)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
+        # stylesheet to change background colour
         self.centralwidget.setStyleSheet("QTabBar::tab:selected {\n"
 "    background: lightblue;\n"
 "    color: black;\n"
@@ -26,6 +27,7 @@ class Ui_MainWindow(object):
 "    background: lightgray;\n"
 "    color: black;\n"
 "}")
+        # #arrange widgets by change their layout
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName("verticalLayout")
@@ -274,11 +276,12 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuProject.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
         self.menubar.addAction(self.menuOption.menuAction())
-
+        # index of tabwidget shows the page when users start the application
         self.retranslateUi(MainWindow)
         self.tabWidget_Importing.setCurrentIndex(0)
         self.tabWidget_Data.setCurrentIndex(0)
         self.tabWidget_3.setCurrentIndex(0)
+        # signal and plot to connect different buttons and output area
         self.pushButton_importfile.clicked.connect(self.open_file_dialog) # type: ignore
         self.pushButton_Import.clicked.connect(self.switch_to_preprocessing_tab) # type: ignore
         self.pushButton_next_to_domain.clicked.connect(self.jump_to_next_page) # type: ignore
@@ -286,6 +289,7 @@ class Ui_MainWindow(object):
         self.pushButton_next_to_visualization.clicked.connect(self.jump_to_next_visualization) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+    # allows users  to locate and move to specific page
     def switch_to_preprocessing_tab(self):
 
         index_of_page = 1
@@ -293,6 +297,7 @@ class Ui_MainWindow(object):
         # Switch to the desired page
         self.tabWidget_Data.setCurrentIndex(index_of_page)
 
+    # realise the function which allows users to upload and save files from their computer
     def open_file_dialog(self):
             options = QFileDialog.Options()
             files, _ = QFileDialog.getOpenFileNames(self, "QFileDialog.getOpenFileNames()", "","All Files (*);;Python Files (*.py)", options=options)
@@ -316,16 +321,55 @@ class Ui_MainWindow(object):
                     with open(files[0], 'r') as f:
                             content = f.read()
 
-                            # Assuming self.textBrowser_showdata is the reference to your QTextEdit widget,
                             # set the content of the file as its text
                             self.textBrowser_showdata.setPlainText(content)
-    def data_show(self):
 
+    #transfer raw data and show them in the textbrowser
+    def data_show(self):
+            # input and output folder
+            input_folder = '/Users/qianzhang/PycharmProjects/pythonProject1/data'
+            output_folder = '/Users/qianzhang/PycharmProjects/pythonProject1/data'
+            # loop for file chang
+            for filename in os.listdir(input_folder):
+                    if filename.endswith('.tx0'):
+
+                            input_file_path = os.path.join(input_folder, filename)
+                            output_file_name = filename.replace('.tx0', '.txt')
+                            output_file_path = os.path.join(output_folder, output_file_name)
+
+                            # fix data row
+                            fixed_data = ["48# Number of electrodes", "# x z"] + [f"{i}     0" for i in range(48)] + [
+                                    "909# Number of data"]
+
+                            data = []
+                            with open(input_file_path, 'r') as input_file:
+                                    lines = input_file.readlines()
+                                    data = [line.strip().split() for line in lines[241:]]
+
+                            selected_data = []
+                            for row in data:
+                                    row_transformed = row.copy()
+                                    for i in [1, 2, 3, 4]:  # index of columns to transform
+                                            item = float(row[i])
+                                            if item >= 48:
+                                                    row_transformed[i] = str(
+                                                            int(item - 48))  # Subtract 48 and convert to string
+                                            else:
+                                                    row_transformed[i] = str(
+                                                            int(item))  # Convert to string without subtracting 48
+                                    selected_data.append([row_transformed[i] for i in
+                                                          [1, 2, 3, 4, 10]])  # Select the specific columns
+
+                            with open(output_file_path, 'w') as output_file:
+                                    # 写入固定的数据行
+                                    for line in fixed_data:
+                                            output_file.write(line + "\n")
+
+                                    output_file.write("# a b m n rhoa\n")
+                                    for row in selected_data:
+                                            output_file.write("\t".join(row) + "\n")
 
             self.textBrowser_showdata.setPlainText('/Users/qianzhang/PycharmProjects/pythonProject1/data/2022-07-02_09-00-00.txt')
-    #def data_transfer(self):
-
-
 
 
     def jump_to_next_page(self):
