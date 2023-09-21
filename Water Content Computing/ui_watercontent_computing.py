@@ -1,8 +1,15 @@
-# -*- coding: utf-8 -*-
+import os
+import matplotlib.pyplot as plt
+import numpy as np
+import pygimli as pg
+import pygimli.meshtools as mt
+from pygimli.physics import ert
+
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QGraphicsView, QGraphicsScene, QGraphicsPixmapItem
 from PyQt5.QtGui import QPixmap
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -162,27 +169,53 @@ class Ui_MainWindow(object):
         self.listView_3.setGeometry(QtCore.QRect(30, 110, 711, 431))
         self.listView_3.setObjectName("listView_3")
         self.tabWidget.addTab(self.Inversion, "")
+
+
+        '''
+        Here is the GUI page for water content calculation, 
+        including one SpinBox, three PushButtons, one SpinBox, and one GraphicsView.
+        '''
+
+        # Water Content Page Layout
         self.tab_5 = QtWidgets.QWidget()
         self.tab_5.setObjectName("tab_5")
+
+        # Temperature Parameter
         self.textEdit_11 = QtWidgets.QTextEdit(self.tab_5)
         self.textEdit_11.setGeometry(QtCore.QRect(0, 10, 111, 31))
         self.textEdit_11.setObjectName("textEdit_11")
+
+        # Temperature Input Field
         self.doubleSpinBox_3 = QtWidgets.QDoubleSpinBox(self.tab_5)
         self.doubleSpinBox_3.setGeometry(QtCore.QRect(120, 10, 71, 31))
         self.doubleSpinBox_3.setDecimals(1)
         self.doubleSpinBox_3.setSingleStep(0.1)
         self.doubleSpinBox_3.setProperty("value", 25.0)
         self.doubleSpinBox_3.setObjectName("doubleSpinBox_3")
-        self.pushButton_12 = QtWidgets.QPushButton(self.tab_5)
-        self.pushButton_12.setGeometry(QtCore.QRect(200, 10, 81, 31))
-        self.pushButton_12.setObjectName("pushButton_12")
+
+        # Display of Temperature
         self.graphicsView = QtWidgets.QGraphicsView(self.tab_5)
-        self.graphicsView.setGeometry(QtCore.QRect(150, 80, 256, 192))
+        self.graphicsView.setGeometry(QtCore.QRect(5, 51, 761, 421))
         self.graphicsView.setObjectName("graphicsView")
-        self.graphicsView.setGeometry(100, 100, 500, 400)
         self.scene = QGraphicsScene()
         self.graphicsView.setScene(self.scene)
+
+        # Button to Input Temperature Field File
+        self.pushButton_13 = QtWidgets.QPushButton(self.tab_5)
+        self.pushButton_13.setGeometry(QtCore.QRect(510, 10, 251, 28))
+        self.pushButton_13.setObjectName("pushButton_13")
+
+        # Button to Calculate
+        self.pushButton_12 = QtWidgets.QPushButton(self.tab_5)
+        self.pushButton_12.setGeometry(QtCore.QRect(0, 480, 81, 31))
+        self.pushButton_12.setObjectName("pushButton_12")
+
+        # Button to next step
+        self.pushButton_15 = QtWidgets.QPushButton(self.tab_5)
+        self.pushButton_15.setGeometry(QtCore.QRect(690, 480, 81, 31))
+        self.pushButton_15.setObjectName("pushButton_15")
         self.tabWidget.addTab(self.tab_5, "")
+
         self.Visualization = QtWidgets.QWidget()
         self.Visualization.setObjectName("Visualization")
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.Visualization)
@@ -256,15 +289,94 @@ class Ui_MainWindow(object):
         self.pushButton_12.clicked.connect(self.showImage) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+    # The following functions will draw the results, save them as a specified name in JPG format, and display the result image on the canvas
     def showImage(self):
-            image_path = "result_water__content_computing.jpg"  
+            # Invoke the Water Content Calculation Function
+            computing=self.watercomputing()
+            #The above functions will draw the results and save them as a specified name in JPG format, displaying the result image on the canvas
+            image_path = "result_water_content.jpg"
             pixmap = QPixmap(image_path)
 
-            pixmap_item = QGraphicsPixmapItem(pixmap)
-            #self.scene.clear()  
-            self.scene.addItem(pixmap_item)
+            # Retrieve the Canvas Dimensions
+            canvas_width = 765
+            canvas_height = 600
 
+            # Scale the Image to Fit the Canvas
+            scaled_pixmap = pixmap.scaled(canvas_width, canvas_height, QtCore.Qt.KeepAspectRatio)
+
+            pixmap_item = QGraphicsPixmapItem(scaled_pixmap)
+            self.scene.clear()
+            self.scene.addItem(pixmap_item)
             self.scene.setSceneRect(pixmap_item.boundingRect())
+
+    '''
+    This function will compute the two-dimensional distribution of 
+    water content at a constant temperature of 25 degrees
+    '''
+    def watercomputing(self):
+        # define computing varibles in Storae
+        Storage = None
+        # input data
+        file_to_comupting = "./2022-07-08_09-00-00.txt"  #
+        # Create Geometry and Mesh
+        geom = mt.createWorld(start=[0, 0], end=[47, -8], worldMarker=False)  # We want to able to input the start and end
+        # pg.show(geom, boundaryMarker=True)
+        mesh = mt.createMesh(geom, quality=33.5, area=0.5, smooth=True)  # We want to able to input the quality and area at least
+        mesh.save("mesh.bms")
+
+        #Storage = np.zeros([np.shape(mesh.cellMarkers())[0], np.shape(entries_sel)[0]])
+        # Inversion preparing
+        date = os.path.basename(file_to_comupting)
+        mgr = ert.ERTManager(file_to_comupting, verbose=True, debug=True)  # load the file
+        rhoa = np.array(mgr.data['rhoa'])  # convert resistivity data in numpy vector
+        Argw = np.argwhere(rhoa <= 0)  # index of negative resistance
+        pg.info('Filtered rhoa (min/max)', min(mgr.data['rhoa']), max(mgr.data['rhoa']))
+        Accur = (1 - np.shape(Argw)[0] / np.shape(rhoa)[0]) * 100  # Percentage of Accuracy
+
+        # Filter negative value
+        mgr.data.remove(mgr.data["rhoa"] < 0)  # Remove the data directly (This should be ok with a fixed mesh created outside of the for cycle)
+
+        # Add estimated Error and geometrical factor
+        mgr.data['err'] = ert.estimateError(mgr.data, absoluteError=0.001, relativeError=0.03)  # Leave as it is for now
+        pg.info('Filtered rhoa (min/max)', min(mgr.data['rhoa']), max(mgr.data['rhoa']))
+        mgr.data['k'] = ert.createGeometricFactors(mgr.data, numerical=True)  # Leave as it is for now
+
+
+        # Inversion
+        inv = mgr.invert(mesh=mesh, lam=10, maxIter=6, dPhi=2, CHI1OPT=5, Verbose=True)  # We want to able to input
+        
+        #Storing and saving data for later manipulation
+        Storage = np.zeros([np.shape(mesh.cellMarkers())[0],1])
+        Storage[:, 0] = inv  # Save in Variable for manipulation
+        mgr.saveResult(date[:-4])  # Save results in folder
+
+        # Converting resistivity to soil water content and visualize (Temperature=25)
+        pg.viewer.showMesh(mesh, data=Storage[:, 1] - Storage[:, 0])
+
+        # A simple empirical formula for converting water content
+        fSWC = lambda x: 246.47 * x ** (-0.627)
+        fSWC_2 = lambda x: 211 * x ** (-0.59)
+        SWC = fSWC(Storage)
+
+        # plotting
+        plt.figure()
+        fig1, (ax1) = plt.subplots(1, sharex=(True), figsize=(15.5, 7), gridspec_kw={'height_ratios': [2]})
+        labels = date
+        ax1.set_xlim(-0, mgr.paraDomain.xmax())
+        ax1.set_ylim(-8, mgr.paraDomain.ymax())
+        ax1.set_title(labels)
+
+        pg.viewer.show(mesh=mesh, data=SWC[:, 1], hold=True, label='Soil water content', ax=ax1, cMin=0, cMax=30,
+                       cMap='Spectral', showMesh=True)
+
+        # The results are automatically saved in JPG format in the directory
+        plt.savefig('result_water_content.jpg')
+        result=fig1
+        self.result=result
+
+        plt.tight_layout()
+        plt.show()
+
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -331,7 +443,9 @@ class Ui_MainWindow(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt;\">Temperture</span></p></body></html>"))
+        self.pushButton_13.setText(_translate("MainWindow", "Import Soil Temprature Field"))
         self.pushButton_12.setText(_translate("MainWindow", "Calculate"))
+        self.pushButton_15.setText(_translate("MainWindow", "Next"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_5), _translate("MainWindow", "Water Content"))
         self.pushButton_7.setText(_translate("MainWindow", "Result"))
         self.pushButton_10.setText(_translate("MainWindow", "Save"))
@@ -348,7 +462,6 @@ class Ui_MainWindow(object):
         self.actionSave.setText(_translate("MainWindow", "Save"))
         self.actionGuidline.setText(_translate("MainWindow", "Guidline"))
         self.actionContract.setText(_translate("MainWindow", "Contract"))
-
 
 if __name__ == "__main__":
     import sys
