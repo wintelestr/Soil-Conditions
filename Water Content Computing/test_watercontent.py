@@ -4,7 +4,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtTest import QTest
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QPushButton, QGraphicsView
-from ui_watercontent_computing.py import Ui_MainWindow  # Assuming your application class is defined in my_app.py
+from ui_watercontent_computing.py import Ui_MainWindow
 
 class TestWaterContent(unittest.TestCase):
 
