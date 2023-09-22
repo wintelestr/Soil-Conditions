@@ -2,11 +2,12 @@
 
 The Water Content window in this PyQt5-based application allows users to perform water content calculations on inverted model data using the PyGIMLi library. Water content calculation is a crucial and final step in modeling, where you can determine the distribution of soil water content based on the resistivity obtained from the inversion model and the relationship between resistivity and water content at different temperatures. This readme provides an overview of the Water Content window and its functionalities.
 
-
-
 # Main Window of Water Content
 
 StackEdit stores your files in your browser, which means all your files are automatically saved locally and are accessible **offline!**
+
+![mainwindow_watercontent](https://github.com/wintelestr/Soil-Conditions/assets/133135894/a4a86b9a-4df6-4498-9cb0-c85facdf8fc2)
+
 
 ## Temperature Parameter (T)
 
@@ -40,6 +41,8 @@ Click the "Calculate" button to start the calculation process. The program will 
 Water Content Results: The water content of the selected grid will be displayed in the center of the window.
 
 Please remember that whether you choose a constant temperature or import a real temperature field should be guided by your observed data and the precision requirements for the final water content results.
+
+![watercontent_result_display](https://github.com/wintelestr/Soil-Conditions/assets/133135894/5b2ec9a9-dff1-442e-9e83-b99ba6cee72d)
 
 
 ## Saving Water Content Results
