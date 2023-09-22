@@ -606,7 +606,6 @@ class Ui_MainWindow(object):
                 # Save the figure as a PNG file
                 self.geom.savefig(file_name, format="png")
 
-
     # Create a function to select Wenner Array Measurement Method
     def wa_method(self):
         self.ax.clear()
@@ -778,3 +777,5 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
+
+       
