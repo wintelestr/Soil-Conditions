@@ -9,7 +9,7 @@ The Water Content window in this PyQt5-based application allows users to perform
 Users have the option to either set a constant temperature or import a temperature field to consider the effect of temperature on water content.
 
 **Spinbox Name:** Temperature
-Temperature Field Import Button: Import Soil Temperature Field
+**Temperature Field Import Button:** Import Soil Temperature Field
 
 **Description:** In the Water Content window, users can specify the constant temperature (default is 25 degrees) using the spinbox or import a two-dimensional distribution file of soil temperature to configure the water content calculation process.
 
