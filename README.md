@@ -6,3 +6,4 @@ There are 5 basic steps/functions (MVP) in our GUI software:
   4. Water Content Computing
   5. Results Visualization
 
+**Each section's user documentation is in its respective file. Please open the folder to view.**
