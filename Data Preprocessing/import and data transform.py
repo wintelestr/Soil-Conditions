@@ -12,6 +12,9 @@ from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QMainWindow, QFileDialog
 from PyQt5.QtGui import QColor
 import os
+import shutil
+
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -20,13 +23,13 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         # stylesheet to change background colour
         self.centralwidget.setStyleSheet("QTabBar::tab:selected {\n"
-"    background: lightblue;\n"
-"    color: black;\n"
-"}\n"
-"QTabBar::tab:!selected {\n"
-"    background: lightgray;\n"
-"    color: black;\n"
-"}")
+                                         "    background: lightblue;\n"
+                                         "    color: black;\n"
+                                         "}\n"
+                                         "QTabBar::tab:!selected {\n"
+                                         "    background: lightgray;\n"
+                                         "    color: black;\n"
+                                         "}")
         # #arrange widgets by change their layout
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -55,7 +58,7 @@ class Ui_MainWindow(object):
         self.tabWidget_Data = QtWidgets.QTabWidget(self.Importing)
         self.tabWidget_Data.setAutoFillBackground(False)
         self.tabWidget_Data.setStyleSheet("color: rgb(0, 0, 0);\n"
-"border-top-color: rgb(0, 0, 0);")
+                                          "border-top-color: rgb(0, 0, 0);")
         self.tabWidget_Data.setObjectName("tabWidget_Data")
         self.Data = QtWidgets.QWidget()
         self.Data.setObjectName("Data")
@@ -242,7 +245,7 @@ class Ui_MainWindow(object):
         self.tabWidget_3.addTab(self.Water_content, "")
         self.horizontalLayout_5.addWidget(self.tabWidget_3)
         self.tabWidget_Importing.addTab(self.Visualization, "")
-        self.horizontalLayout_2.addWidget(self.tabWidget_Importing, 0, QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+        self.horizontalLayout_2.addWidget(self.tabWidget_Importing, 0, QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         self.verticalLayout.addWidget(self.verticalWidget)
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -282,11 +285,11 @@ class Ui_MainWindow(object):
         self.tabWidget_Data.setCurrentIndex(0)
         self.tabWidget_3.setCurrentIndex(0)
         # signal and plot to connect different buttons and output area
-        self.pushButton_importfile.clicked.connect(self.open_file_dialog) # type: ignore
-        self.pushButton_Import.clicked.connect(self.switch_to_preprocessing_tab) # type: ignore
-        self.pushButton_next_to_domain.clicked.connect(self.jump_to_next_page) # type: ignore
-        self.pushButton_Transfer_Data.clicked.connect(self.data_show) # type: ignore
-        self.pushButton_next_to_visualization.clicked.connect(self.jump_to_next_visualization) # type: ignore
+        self.pushButton_importfile.clicked.connect(self.open_file_dialog)  # type: ignore
+        self.pushButton_Import.clicked.connect(self.switch_to_preprocessing_tab)  # type: ignore
+        self.pushButton_next_to_domain.clicked.connect(self.jump_to_next_page)  # type: ignore
+        self.pushButton_Transfer_Data.clicked.connect(self.data_show)  # type: ignore
+        self.pushButton_next_to_visualization.clicked.connect(self.jump_to_next_visualization)  # type: ignore
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     # allows users  to locate and move to specific page
@@ -299,79 +302,87 @@ class Ui_MainWindow(object):
 
     # realise the function which allows users to upload and save files from their computer
     def open_file_dialog(self):
-            options = QFileDialog.Options()
-            files, _ = QFileDialog.getOpenFileNames(self, "QFileDialog.getOpenFileNames()", "","All Files (*);;Python Files (*.py)", options=options)
+        options = QFileDialog.Options()
+        files, _ = QFileDialog.getOpenFileNames(self, "QFileDialog.getOpenFileNames()", "",
+                                                "All Files (*);;Python Files (*.py)", options=options)
 
-            if files:
-                    self.listWidget_file_list.clear()
+        if files:
+            self.listWidget_file_list.clear()
 
-                    # Ask the user where to save the files
-                    save_directory = QFileDialog.getExistingDirectory(self, "Select Directory to Save Files")
+            # Define the fixed save directory
+            save_directory = "/Users/qianzhang/PycharmProjects/pythonProject1/data"
 
-                    if save_directory:
-                            for file in files:
-                                    item = QtWidgets.QListWidgetItem(file)
-                                    item.setForeground(QColor('lightblue'))
-                                    self.listWidget_file_list.addItem(item)
+            # Create the directory if it does not exist
+            os.makedirs(save_directory, exist_ok=True)
 
-                                    # Copy the file to the new directory
-                                    import shutil
-                                    shutil.copy(file, save_directory)
+            for file in files:
+                item = QtWidgets.QListWidgetItem(file)
+                item.setForeground(QColor('lightblue'))
+                self.listWidget_file_list.addItem(item)
 
-                    with open(files[0], 'r') as f:
-                            content = f.read()
+                # Define the destination file path in the save directory
+                destination_file = os.path.join(save_directory, os.path.basename(file))
 
-                            # set the content of the file as its text
-                            self.textBrowser_showdata.setPlainText(content)
+                # Copy the file to the new directory and replace if it already exists
+                shutil.copy(file, destination_file)
 
-    #transfer raw data and show them in the textbrowser
+            with open(files[0], 'r') as f:
+                content = f.read()
+
+                # set the content of the file as its text
+                self.textBrowser_showdata.setPlainText(content)
+
+    # transfer raw data and show them in the text-browser
+    def data_transfer(self):
+        # input and output folder
+        input_folder = '/Users/qianzhang/PycharmProjects/pythonProject1/data'
+        output_folder = '/Users/qianzhang/PycharmProjects/pythonProject1/data'
+        # loop for file chang
+        for filename in os.listdir(input_folder):
+            if filename.endswith('.tx0'):
+
+                input_file_path = os.path.join(input_folder, filename)
+                output_file_name = filename.replace('.tx0', '.txt')
+                output_file_path = os.path.join(output_folder, output_file_name)
+
+                # fix data row
+                fixed_data = ["48# Number of electrodes", "# x z"] + [f"{i}     0" for i in range(48)] + [
+                    "909# Number of data"]
+
+                data = []
+                with open(input_file_path, 'r') as input_file:
+                    lines = input_file.readlines()
+                    data = [line.strip().split() for line in lines[244:]]
+
+                selected_data = []
+                for row in data:
+                    row_transformed = row.copy()
+                    for i in [1, 2, 3, 4]:  # index of columns to transform
+                        item = float(row[i])
+                        if item >= 48:
+                            row_transformed[i] = str(
+                                int(item - 48))  # Subtract 48 and convert to string
+                        else:
+                            row_transformed[i] = str(
+                                int(item))  # Convert to string without subtracting 48
+                    selected_data.append([row_transformed[i] for i in
+                                          [1, 2, 3, 4, 10]])  # Select the specific columns
+
+                with open(output_file_path, 'w') as output_file:
+                    # 写入固定的数据行
+                    for line in fixed_data:
+                        output_file.write(line + "\n")
+
+                    output_file.write("# a b m n rhoa\n")
+                    for row in selected_data:
+                        output_file.write("\t".join(row) + "\n")
+                return output_file_path
+
     def data_show(self):
-            # input and output folder
-            input_folder = '/Users/qianzhang/PycharmProjects/pythonProject1/data'
-            output_folder = '/Users/qianzhang/PycharmProjects/pythonProject1/data'
-            # loop for file chang
-            for filename in os.listdir(input_folder):
-                    if filename.endswith('.tx0'):
-
-                            input_file_path = os.path.join(input_folder, filename)
-                            output_file_name = filename.replace('.tx0', '.txt')
-                            output_file_path = os.path.join(output_folder, output_file_name)
-
-                            # fix data row
-                            fixed_data = ["48# Number of electrodes", "# x z"] + [f"{i}     0" for i in range(48)] + [
-                                    "909# Number of data"]
-
-                            data = []
-                            with open(input_file_path, 'r') as input_file:
-                                    lines = input_file.readlines()
-                                    data = [line.strip().split() for line in lines[241:]]
-
-                            selected_data = []
-                            for row in data:
-                                    row_transformed = row.copy()
-                                    for i in [1, 2, 3, 4]:  # index of columns to transform
-                                            item = float(row[i])
-                                            if item >= 48:
-                                                    row_transformed[i] = str(
-                                                            int(item - 48))  # Subtract 48 and convert to string
-                                            else:
-                                                    row_transformed[i] = str(
-                                                            int(item))  # Convert to string without subtracting 48
-                                    selected_data.append([row_transformed[i] for i in
-                                                          [1, 2, 3, 4, 10]])  # Select the specific columns
-
-                            with open(output_file_path, 'w') as output_file:
-                                    # 写入固定的数据行
-                                    for line in fixed_data:
-                                            output_file.write(line + "\n")
-
-                                    output_file.write("# a b m n rhoa\n")
-                                    for row in selected_data:
-                                            output_file.write("\t".join(row) + "\n")
-
-            self.textBrowser_showdata.setPlainText('/Users/qianzhang/PycharmProjects/pythonProject1/data/2022-07-02_09-00-00.txt')
-
-
+        output_file_path = self.data_transfer
+        with open (output_file_path, 'r') as file:
+            content = file.read()
+        self.textBrowser_showdata.setPlainText(content)
     def jump_to_next_page(self):
         index_of_page = 1
 
@@ -383,6 +394,7 @@ class Ui_MainWindow(object):
 
         # Switch to the desired page
         self.tabWidget_Importing.setCurrentIndex(index_of_page)
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -392,73 +404,90 @@ class Ui_MainWindow(object):
         self.pushButton_Transfer_Data.setText(_translate("MainWindow", "Transfer Data"))
         self.pushButton_next_to_visualization.setText(_translate("MainWindow", "Next-multiple file"))
         self.pushButton_next_to_domain.setText(_translate("MainWindow", "Next-single file"))
-        self.tabWidget_Data.setTabText(self.tabWidget_Data.indexOf(self.Pre_processing), _translate("MainWindow", "Pre_processing"))
-        self.tabWidget_Importing.setTabText(self.tabWidget_Importing.indexOf(self.Importing), _translate("MainWindow", "Importing"))
+        self.tabWidget_Data.setTabText(self.tabWidget_Data.indexOf(self.Pre_processing),
+                                       _translate("MainWindow", "Pre_processing"))
+        self.tabWidget_Importing.setTabText(self.tabWidget_Importing.indexOf(self.Importing),
+                                            _translate("MainWindow", "Importing"))
         self.pushButton_4.setText(_translate("MainWindow", "Apply"))
         self.pushButton_8.setText(_translate("MainWindow", "Save"))
-        self.textEdit_3.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:9pt;\">Geometry:</span></p></body></html>"))
-        self.textEdit.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:9pt;\">start</span></p></body></html>"))
-        self.textEdit_2.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:9pt;\">end</span></p></body></html>"))
-        self.textEdit_4.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:9pt;\">Mesh:</span></p></body></html>"))
-        self.textEdit_5.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:9pt;\">Quality</span></p></body></html>"))
-        self.textEdit_6.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:9pt;\">Area</span></p></body></html>"))
-        self.tabWidget_Importing.setTabText(self.tabWidget_Importing.indexOf(self.Domain_Mesh), _translate("MainWindow", "Domain and Mesh"))
-        self.textEdit_8.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:9pt;\">maxIter:</span></p></body></html>"))
-        self.textEdit_9.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:9pt;\">Lam:</span></p></body></html>"))
-        self.textEdit_10.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:9pt;\">dPhi:</span></p></body></html>"))
+        self.textEdit_3.setHtml(_translate("MainWindow",
+                                           "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                           "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                           "p, li { white-space: pre-wrap; }\n"
+                                           "</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
+                                           "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:9pt;\">Geometry:</span></p></body></html>"))
+        self.textEdit.setHtml(_translate("MainWindow",
+                                         "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                         "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                         "p, li { white-space: pre-wrap; }\n"
+                                         "</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
+                                         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:9pt;\">start</span></p></body></html>"))
+        self.textEdit_2.setHtml(_translate("MainWindow",
+                                           "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                           "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                           "p, li { white-space: pre-wrap; }\n"
+                                           "</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
+                                           "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:9pt;\">end</span></p></body></html>"))
+        self.textEdit_4.setHtml(_translate("MainWindow",
+                                           "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                           "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                           "p, li { white-space: pre-wrap; }\n"
+                                           "</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
+                                           "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:9pt;\">Mesh:</span></p></body></html>"))
+        self.textEdit_5.setHtml(_translate("MainWindow",
+                                           "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                           "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                           "p, li { white-space: pre-wrap; }\n"
+                                           "</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
+                                           "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:9pt;\">Quality</span></p></body></html>"))
+        self.textEdit_6.setHtml(_translate("MainWindow",
+                                           "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                           "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                           "p, li { white-space: pre-wrap; }\n"
+                                           "</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
+                                           "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:9pt;\">Area</span></p></body></html>"))
+        self.tabWidget_Importing.setTabText(self.tabWidget_Importing.indexOf(self.Domain_Mesh),
+                                            _translate("MainWindow", "Domain and Mesh"))
+        self.textEdit_8.setHtml(_translate("MainWindow",
+                                           "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                           "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                           "p, li { white-space: pre-wrap; }\n"
+                                           "</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
+                                           "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:9pt;\">maxIter:</span></p></body></html>"))
+        self.textEdit_9.setHtml(_translate("MainWindow",
+                                           "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                           "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                           "p, li { white-space: pre-wrap; }\n"
+                                           "</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
+                                           "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:9pt;\">Lam:</span></p></body></html>"))
+        self.textEdit_10.setHtml(_translate("MainWindow",
+                                            "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                            "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                            "p, li { white-space: pre-wrap; }\n"
+                                            "</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
+                                            "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:9pt;\">dPhi:</span></p></body></html>"))
         self.pushButton_5.setText(_translate("MainWindow", "Apply"))
         self.pushButton_9.setText(_translate("MainWindow", "Save"))
-        self.tabWidget_Importing.setTabText(self.tabWidget_Importing.indexOf(self.Inversion), _translate("MainWindow", "Inversion"))
-        self.textEdit_11.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Temperture</p></body></html>"))
+        self.tabWidget_Importing.setTabText(self.tabWidget_Importing.indexOf(self.Inversion),
+                                            _translate("MainWindow", "Inversion"))
+        self.textEdit_11.setHtml(_translate("MainWindow",
+                                            "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                            "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                            "p, li { white-space: pre-wrap; }\n"
+                                            "</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
+                                            "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Temperture</p></body></html>"))
         self.pushButton_12.setText(_translate("MainWindow", "Calculate"))
-        self.tabWidget_Importing.setTabText(self.tabWidget_Importing.indexOf(self.tab_5), _translate("MainWindow", "Water Content"))
+        self.tabWidget_Importing.setTabText(self.tabWidget_Importing.indexOf(self.tab_5),
+                                            _translate("MainWindow", "Water Content"))
         self.pushButton_7.setText(_translate("MainWindow", "Result"))
         self.pushButton_10.setText(_translate("MainWindow", "Save"))
         self.tabWidget_3.setTabText(self.tabWidget_3.indexOf(self.Resistivity), _translate("MainWindow", "Resistivity"))
         self.pushButton_6.setText(_translate("MainWindow", "Convert"))
         self.pushButton_11.setText(_translate("MainWindow", "Save"))
-        self.tabWidget_3.setTabText(self.tabWidget_3.indexOf(self.Water_content), _translate("MainWindow", "Water content"))
-        self.tabWidget_Importing.setTabText(self.tabWidget_Importing.indexOf(self.Visualization), _translate("MainWindow", "Visualization"))
+        self.tabWidget_3.setTabText(self.tabWidget_3.indexOf(self.Water_content),
+                                    _translate("MainWindow", "Water content"))
+        self.tabWidget_Importing.setTabText(self.tabWidget_Importing.indexOf(self.Visualization),
+                                            _translate("MainWindow", "Visualization"))
         self.menuProject.setTitle(_translate("MainWindow", "Project"))
         self.menuHelp.setTitle(_translate("MainWindow", "Help"))
         self.menuOption.setTitle(_translate("MainWindow", "Option"))
