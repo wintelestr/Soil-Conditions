@@ -10,6 +10,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QGraphicsView, QGraphicsScene, QGraphicsPixmapItem
 from PyQt5.QtGui import QPixmap
 
+tem_field=[(0,25)]
+tem=25
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -170,10 +172,10 @@ class Ui_MainWindow(object):
         self.listView_3.setObjectName("listView_3")
         self.tabWidget.addTab(self.Inversion, "")
 
-
+#####################################
         '''
         Here is the GUI page for water content calculation, 
-        including one SpinBox, three PushButtons, one SpinBox, and one GraphicsView.
+        including one SpinBox, three PushButtons, and one GraphicsView.
         '''
 
         # Water Content Page Layout
@@ -185,13 +187,17 @@ class Ui_MainWindow(object):
         self.textEdit_11.setGeometry(QtCore.QRect(0, 10, 111, 31))
         self.textEdit_11.setObjectName("textEdit_11")
 
-        # Temperature Input Field
+        ############### Temperature Input value
         self.doubleSpinBox_3 = QtWidgets.QDoubleSpinBox(self.tab_5)
         self.doubleSpinBox_3.setGeometry(QtCore.QRect(120, 10, 71, 31))
         self.doubleSpinBox_3.setDecimals(1)
         self.doubleSpinBox_3.setSingleStep(0.1)
         self.doubleSpinBox_3.setProperty("value", 25.0)
         self.doubleSpinBox_3.setObjectName("doubleSpinBox_3")
+        
+        self.doubleSpinBox_3.valueChanged.connect(self.update_variable)
+        
+        self.my_variable = 0.0
 
         # Display of Temperature
         self.graphicsView = QtWidgets.QGraphicsView(self.tab_5)
@@ -200,10 +206,11 @@ class Ui_MainWindow(object):
         self.scene = QGraphicsScene()
         self.graphicsView.setScene(self.scene)
 
-        # Button to Input Temperature Field File
+        # Button to Input Temperature
         self.pushButton_13 = QtWidgets.QPushButton(self.tab_5)
         self.pushButton_13.setGeometry(QtCore.QRect(510, 10, 251, 28))
         self.pushButton_13.setObjectName("pushButton_13")
+        self.pushButton_13.clicked.connect(self.openTableDialog)
 
         # Button to Calculate
         self.pushButton_12 = QtWidgets.QPushButton(self.tab_5)
@@ -215,6 +222,8 @@ class Ui_MainWindow(object):
         self.pushButton_15.setGeometry(QtCore.QRect(690, 480, 81, 31))
         self.pushButton_15.setObjectName("pushButton_15")
         self.tabWidget.addTab(self.tab_5, "")
+
+##############################
 
         self.Visualization = QtWidgets.QWidget()
         self.Visualization.setObjectName("Visualization")
@@ -292,11 +301,14 @@ class Ui_MainWindow(object):
     # The following functions will draw the results, save them as a specified name in JPG format, and display the result image on the canvas
     def showImage(self):
             # Invoke the Water Content Calculation Function
-            computing=self.watercomputing()
+            print(tem_field)
+            try:
+                    self.watercomputing()
+            except Exception as e:
+                    print("An error occurred:", e)
             #The above functions will draw the results and save them as a specified name in JPG format, displaying the result image on the canvas
             image_path = "result_water_content.jpg"
             pixmap = QPixmap(image_path)
-
             # Retrieve the Canvas Dimensions
             canvas_width = 765
             canvas_height = 600
@@ -314,68 +326,161 @@ class Ui_MainWindow(object):
     water content at a constant temperature of 25 degrees
     '''
     def watercomputing(self):
-        # define computing varibles in Storae
-        Storage = None
-        # input data
-        file_to_comupting = "./2022-07-08_09-00-00.txt"  #
-        # Create Geometry and Mesh
-        geom = mt.createWorld(start=[0, 0], end=[47, -8], worldMarker=False)  # We want to able to input the start and end
-        # pg.show(geom, boundaryMarker=True)
-        mesh = mt.createMesh(geom, quality=33.5, area=0.5, smooth=True)  # We want to able to input the quality and area at least
-        mesh.save("mesh.bms")
+            "ERT Inversion and Visualization process"
 
-        #Storage = np.zeros([np.shape(mesh.cellMarkers())[0], np.shape(entries_sel)[0]])
-        # Inversion preparing
-        date = os.path.basename(file_to_comupting)
-        mgr = ert.ERTManager(file_to_comupting, verbose=True, debug=True)  # load the file
-        rhoa = np.array(mgr.data['rhoa'])  # convert resistivity data in numpy vector
-        Argw = np.argwhere(rhoa <= 0)  # index of negative resistance
-        pg.info('Filtered rhoa (min/max)', min(mgr.data['rhoa']), max(mgr.data['rhoa']))
-        Accur = (1 - np.shape(Argw)[0] / np.shape(rhoa)[0]) * 100  # Percentage of Accuracy
+            folder = r"."  # Update this to reflect the folder lcoation
+            os.chdir(folder)
 
-        # Filter negative value
-        mgr.data.remove(mgr.data["rhoa"] < 0)  # Remove the data directly (This should be ok with a fixed mesh created outside of the for cycle)
+            ''' Begin Workflow '''
 
-        # Add estimated Error and geometrical factor
-        mgr.data['err'] = ert.estimateError(mgr.data, absoluteError=0.001, relativeError=0.03)  # Leave as it is for now
-        pg.info('Filtered rhoa (min/max)', min(mgr.data['rhoa']), max(mgr.data['rhoa']))
-        mgr.data['k'] = ert.createGeometricFactors(mgr.data, numerical=True)  # Leave as it is for now
+            # Iterate directory
+            entries_sel = []
+
+            for file in os.listdir():
+                    # check only text files
+                    if file.endswith('.txt'):
+                            entries_sel.append(file)
+
+            ''' Create Geometry and Mesh'''
+
+            geom = mt.createWorld(start=[0, 0], end=[47, -8],
+                                  worldMarker=False)  # We want to able to input the start and end
+            #pg.show(geom, boundaryMarker=True)
+            mesh = mt.createMesh(geom, quality=33.5, area=0.5,
+                                 smooth=True)  # We want to able to input the quality and area at least
+            print("mesh", mesh)
+            mesh.save("mesh.bms")
+
+            centers = mesh.cellCenters()
+            x_coordinates = centers[:, 0]
+            y_coordinates = centers[:, 1]
+            np.shape(centers)
+            print("x_coordinates", x_coordinates)
+            print("y_coordinates", y_coordinates)
+            Storage = np.zeros([np.shape(mesh.cellMarkers())[0], np.shape(entries_sel)[0]])
+
+            ''' Begin Inversion '''
+
+            for i in range(0, len(entries_sel) - 1):
+
+                    date = entries_sel[i]
+                    mgr = ert.ERTManager(entries_sel[i], verbose=True, debug=True)  # load the file
+                    rhoa = np.array(mgr.data['rhoa'])  # convert resistivity data in numpy vector
+                    Argw = np.argwhere(rhoa <= 0)  # index of negative resistance
+                    #pg.info('Filtered rhoa (min/max)', min(mgr.data['rhoa']), max(mgr.data['rhoa']))
+                    #Accur = (1 - np.shape(Argw)[0] / np.shape(rhoa)[0]) * 100  # Percentage of Accuracy
+                    # as (1 - negative values/total values) * 100
+                    # Accur is something I'd like to be printed as information
+
+                    ''' Filter negative value '''
+
+                    mgr.data.remove(mgr.data[
+                                            "rhoa"] < 0)  # Remove the data directly (This should be ok with a fixed mesh created outside of the for cycle)
+
+                    ''' Add estimated Error and geometrical factor'''
+
+                    mgr.data['err'] = ert.estimateError(mgr.data, absoluteError=0.001,
+                                                        relativeError=0.03)  # Leave as it is for now
+                    pg.info('Filtered rhoa (min/max)', min(mgr.data['rhoa']), max(mgr.data['rhoa']))
+                    mgr.data['k'] = ert.createGeometricFactors(mgr.data, numerical=True)  # Leave as it is for now
+                    #ert.show(mgr.data)
+
+                    '''Inversion '''
+
+                    inv = mgr.invert(mesh=mesh, lam=10, maxIter=6, dPhi=2, CHI1OPT=5,
+                                     Verbose=True)  # We want to able to input
+                    # maxIter, Lam, dPhi
+
+                    # More complex way of inverting. WE WILL Look at it later
+
+                    # inv = mgr.invert(secNodes=2,SURFACESMOOTH=1,paraDX=0.5,TOPOGRAPHY=1, PARA2DQUALITY=33.8,EQUIDISTBOUNDARY=1, paraMaxCellSize=2.0,
+                    #                 maxIter=20, LAMBDA=30, CHI1OPT=2, verbose=True)
+
+                    # np.testing.assert_approx_equal(mgr.inv._inv.chi2(),2)  assessing the quality of the inversion with Chi^2 metric
+
+                    '''Storing and saving data for later manipulation'''
+
+                    Storage[:, i] = inv  # Save in Variable for manipulation
+                    mgr.saveResult(date[:-4])  # Save results in folder
+                    print("12", mgr.saveResult(date[:-4]))
+                    print(Storage)
+                    '''Plotting'''
+
+                    # fig1, (ax1) = plt.subplots(1, sharex=(True), figsize=(16.0, 5))
+                    # mgr.showResult(ax=ax1, cMin=50, cMax=15000)
+                    # labels = date
+                    # ax1.set_xlim(-0, mgr.paraDomain.xmax())
+                    # ax1.set_ylim(-8, mgr.paraDomain.ymax())
+                    # ax1.set_title(labels)
+                    # plt.tight_layout()
+                    # plt.close()
+
+                    ##%%
+
+                    '''Converting resistivity to soil water content and visualize'''
+                    # pg.viewer.showMesh(mesh,data=Storage[:,1]-Storage[:,0])
+                    fSWC = lambda x: 246.47 * x ** (-0.627)
+                    fSWC_2 = lambda x: 211 * x ** (-0.59)
+
+                    # temperature
+                    # Define the temperature points
+                    # temperature_points = [
+                    #         (0, -5),
+                    #         (-10, -5)
+                    # ]
+                    global tem_field
+                    print("t111111111111111",tem_field)
+                    temperature_points = tem_field
+                    temperature_points.sort(key=lambda x: x[0])
+                    for j in range(len(y_coordinates) - 1):
+                            y = y_coordinates[j]
+                            # Find the temperature segment the current belongs to
+                            for i in range(len(temperature_points) - 1):
+                                    y1, T1 = temperature_points[i]
+                                    y2, T2 = temperature_points[i + 1]
+                                    if y1 <= y <= y2:
+                                            # Linearly interpolate the temperature value
+                                            T = T1 + (T2 - T1) * ((y - y1) / (y2 - y1))
+                                            break
+                                    else:
+                                            # If y is out of bounds of the temperature points, use the nearest boundary value
+                                            T = T1 if y < y1 else T2
+                            Storage[j, :] = (1 + 0.025 * (T - 25)) * Storage[j, :]
+
+                    # T = 25.5
+                    # Storage1 = (1 + 0.025 * (T - 25))*Storage
+                    # SWC = fSWC(Storage1)
+
+                    SWC = fSWC(Storage)
+
+                    print("11111111111")
+                    print(Storage)
+
+                    fig1, (ax1) = plt.subplots(1, sharex=(True), figsize=(15.5, 7), gridspec_kw={'height_ratios': [2]})
+                    # plt.close()
+                    pg.viewer.show(mesh=mesh, data=SWC[:, 0], hold=True, label='Soil water content', ax=ax1, cMin=0,
+                                   cMax=30,
+                                   cMap='Spectral', showMesh=True)
+                    print("12321321131321")
+
+                    labels = date
+                    ax1.set_xlim(-0, mgr.paraDomain.xmax())
+                    ax1.set_ylim(-8, mgr.paraDomain.ymax())
+                    ax1.set_title(labels)
+                    plt.savefig('result_water_content.jpg')
+                    plt.close()
+                    print("end")
+                    # plt.tight_layout()
+                    # plt.show()
 
 
-        # Inversion
-        inv = mgr.invert(mesh=mesh, lam=10, maxIter=6, dPhi=2, CHI1OPT=5, Verbose=True)  # We want to able to input
-        
-        #Storing and saving data for later manipulation
-        Storage = np.zeros([np.shape(mesh.cellMarkers())[0],1])
-        Storage[:, 0] = inv  # Save in Variable for manipulation
-        mgr.saveResult(date[:-4])  # Save results in folder
 
-        # Converting resistivity to soil water content and visualize (Temperature=25)
-        pg.viewer.showMesh(mesh, data=Storage[:, 1] - Storage[:, 0])
-
-        # A simple empirical formula for converting water content
-        fSWC = lambda x: 246.47 * x ** (-0.627)
-        fSWC_2 = lambda x: 211 * x ** (-0.59)
-        SWC = fSWC(Storage)
-
-        # plotting
-        plt.figure()
-        fig1, (ax1) = plt.subplots(1, sharex=(True), figsize=(15.5, 7), gridspec_kw={'height_ratios': [2]})
-        labels = date
-        ax1.set_xlim(-0, mgr.paraDomain.xmax())
-        ax1.set_ylim(-8, mgr.paraDomain.ymax())
-        ax1.set_title(labels)
-
-        pg.viewer.show(mesh=mesh, data=SWC[:, 1], hold=True, label='Soil water content', ax=ax1, cMin=0, cMax=30,
-                       cMap='Spectral', showMesh=True)
-
-        # The results are automatically saved in JPG format in the directory
-        plt.savefig('result_water_content.jpg')
-        result=fig1
-        self.result=result
-
-        plt.tight_layout()
-        plt.show()
+        # plt.savefig('result_water_content.jpg')
+        # result=fig1
+        # self.result=result
+        #
+        # plt.tight_layout()
+        # plt.show()
 
 
     def retranslateUi(self, MainWindow):
@@ -462,6 +567,70 @@ class Ui_MainWindow(object):
         self.actionSave.setText(_translate("MainWindow", "Save"))
         self.actionGuidline.setText(_translate("MainWindow", "Guidline"))
         self.actionContract.setText(_translate("MainWindow", "Contract"))
+
+
+    def update_variable(self, value):
+        self.my_variable = value
+        global tem
+        tem = self.my_variable
+        global tem_field
+        tem_field=[(0,tem)]
+        print(f"Updated variable: {self.my_variable}")
+
+    def openTableDialog(self):
+            print("11111111111")
+            dialog = TableDialog(self.tab_5)
+            print("122112")
+            dialog.exec_()  
+            print("2222222")
+
+class TableDialog(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        print("000000000")
+
+        self.setWindowTitle('Editable Table Dialog')
+
+        self.table_widget = QtWidgets.QTableWidget(self)
+        self.table_widget.setEditTriggers(QtWidgets.QTableWidget.AllEditTriggers)
+
+        self.button = QtWidgets.QPushButton('Get Values', self)
+        self.button.setGeometry(50, 220, 100, 30)
+        try:
+            self.button.clicked.connect(self.getValues)
+        except Exception as e:
+            print("An error occurred:", e)
+            
+        self.table_widget.setRowCount(3)
+        self.table_widget.setColumnCount(2)
+        
+        layout = QtWidgets.QVBoxLayout()
+        layout.addWidget(self.table_widget)
+        layout.addWidget(self.button)
+
+        
+        self.setLayout(layout)
+    def getValues(self):
+        values = []
+        global tem_field
+        tem_field = []
+        
+        for row in range(self.table_widget.rowCount()):
+            row_values = []
+            for col in range(self.table_widget.columnCount()):
+                item = self.table_widget.item(row, col)
+                if item is not None:
+                    row_values.append(item.text())
+                else:
+                    row_values.append('')
+            values.append(row_values)
+
+        # tem_field=[]
+        for row in values:
+            print(float(row[0]))
+            tem_field.append((float(row[0]),float(row[1])))
+
+        print(tem_field)
 
 if __name__ == "__main__":
     import sys
