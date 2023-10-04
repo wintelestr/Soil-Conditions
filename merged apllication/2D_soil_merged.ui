@@ -1,0 +1,990 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>825</width>
+    <height>660</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="autoFillBackground">
+   <bool>true</bool>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true">QTabBar::tab:selected {
+    background: lightblue;
+    color: black;
+}
+QTabBar::tab:!selected {
+    background: lightgray;
+    color: black;
+}</string>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QWidget" name="verticalWidget" native="true">
+      <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0">
+       <property name="spacing">
+        <number>10</number>
+       </property>
+       <property name="leftMargin">
+        <number>10</number>
+       </property>
+       <property name="topMargin">
+        <number>10</number>
+       </property>
+       <property name="rightMargin">
+        <number>10</number>
+       </property>
+       <property name="bottomMargin">
+        <number>10</number>
+       </property>
+       <item>
+        <widget class="QTabWidget" name="tabWidget_Importing">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>781</width>
+           <height>571</height>
+          </size>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="currentIndex">
+          <number>4</number>
+         </property>
+         <widget class="QWidget" name="Importing">
+          <attribute name="title">
+           <string>Importing</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <item>
+            <widget class="QTabWidget" name="tabWidget_Data">
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color: rgb(0, 0, 0);
+border-top-color: rgb(0, 0, 0);</string>
+             </property>
+             <property name="currentIndex">
+              <number>1</number>
+             </property>
+             <widget class="QWidget" name="Data">
+              <attribute name="title">
+               <string>Data</string>
+              </attribute>
+              <widget class="QListWidget" name="listWidget_file_list">
+               <property name="geometry">
+                <rect>
+                 <x>130</x>
+                 <y>20</y>
+                 <width>461</width>
+                 <height>451</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background: rgb(255, 255, 255)</string>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="pushButton_Import">
+               <property name="geometry">
+                <rect>
+                 <x>630</x>
+                 <y>440</y>
+                 <width>82</width>
+                 <height>32</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Import</string>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="pushButton_importfile">
+               <property name="geometry">
+                <rect>
+                 <x>610</x>
+                 <y>111</y>
+                 <width>141</width>
+                 <height>41</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Choose your file</string>
+               </property>
+              </widget>
+             </widget>
+             <widget class="QWidget" name="Pre_processing">
+              <attribute name="title">
+               <string>Pre_processing</string>
+              </attribute>
+              <widget class="QPushButton" name="pushButton_Transfer_Data">
+               <property name="geometry">
+                <rect>
+                 <x>610</x>
+                 <y>110</y>
+                 <width>126</width>
+                 <height>41</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Transfer Data</string>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="pushButton_next_to_visualization">
+               <property name="geometry">
+                <rect>
+                 <x>605</x>
+                 <y>459</y>
+                 <width>146</width>
+                 <height>32</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Next-multiple file</string>
+               </property>
+              </widget>
+              <widget class="QTextBrowser" name="textBrowser_showdata">
+               <property name="geometry">
+                <rect>
+                 <x>130</x>
+                 <y>20</y>
+                 <width>461</width>
+                 <height>451</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background: rgb(255, 255, 255)</string>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="pushButton_next_to_domain">
+               <property name="geometry">
+                <rect>
+                 <x>605</x>
+                 <y>425</y>
+                 <width>134</width>
+                 <height>32</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Next-single file</string>
+               </property>
+              </widget>
+             </widget>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="Domain_Mesh">
+          <attribute name="title">
+           <string>Domain and Mesh</string>
+          </attribute>
+          <widget class="QTabWidget" name="tabWidget">
+           <property name="geometry">
+            <rect>
+             <x>40</x>
+             <y>0</y>
+             <width>731</width>
+             <height>541</height>
+            </rect>
+           </property>
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <widget class="QWidget" name="Domain">
+            <attribute name="title">
+             <string>Domain</string>
+            </attribute>
+            <widget class="QSpinBox" name="spinBox_startX">
+             <property name="geometry">
+              <rect>
+               <x>210</x>
+               <y>20</y>
+               <width>40</width>
+               <height>21</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QGraphicsView" name="graphicsView_domain">
+             <property name="geometry">
+              <rect>
+               <x>100</x>
+               <y>100</y>
+               <width>511</width>
+               <height>311</height>
+              </rect>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="pushButton_domain_apply">
+             <property name="geometry">
+              <rect>
+               <x>500</x>
+               <y>20</y>
+               <width>101</width>
+               <height>51</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Apply</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="pushButton_next_to_mesh">
+             <property name="geometry">
+              <rect>
+               <x>530</x>
+               <y>430</y>
+               <width>71</width>
+               <height>32</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Next</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="pushButton_domain_save">
+             <property name="geometry">
+              <rect>
+               <x>110</x>
+               <y>430</y>
+               <width>73</width>
+               <height>32</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Save</string>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label_start">
+             <property name="geometry">
+              <rect>
+               <x>117</x>
+               <y>20</y>
+               <width>41</width>
+               <height>21</height>
+              </rect>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);</string>
+             </property>
+             <property name="text">
+              <string>Start</string>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label_end">
+             <property name="geometry">
+              <rect>
+               <x>117</x>
+               <y>50</y>
+               <width>41</width>
+               <height>21</height>
+              </rect>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);</string>
+             </property>
+             <property name="text">
+              <string>End</string>
+             </property>
+            </widget>
+            <widget class="QSpinBox" name="spinBox_endX">
+             <property name="geometry">
+              <rect>
+               <x>210</x>
+               <y>50</y>
+               <width>40</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QSpinBox" name="spinBox_stratY">
+             <property name="geometry">
+              <rect>
+               <x>290</x>
+               <y>20</y>
+               <width>40</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QSpinBox" name="spinBox_endY">
+             <property name="geometry">
+              <rect>
+               <x>290</x>
+               <y>50</y>
+               <width>40</width>
+               <height>21</height>
+              </rect>
+             </property>
+            </widget>
+           </widget>
+           <widget class="QWidget" name="Mesh">
+            <attribute name="title">
+             <string>Mesh</string>
+            </attribute>
+            <widget class="QLabel" name="label_quality">
+             <property name="geometry">
+              <rect>
+               <x>120</x>
+               <y>20</y>
+               <width>51</width>
+               <height>21</height>
+              </rect>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);</string>
+             </property>
+             <property name="text">
+              <string>Quality</string>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label_area">
+             <property name="geometry">
+              <rect>
+               <x>120</x>
+               <y>50</y>
+               <width>51</width>
+               <height>21</height>
+              </rect>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);</string>
+             </property>
+             <property name="text">
+              <string>Area</string>
+             </property>
+            </widget>
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_quality">
+             <property name="geometry">
+              <rect>
+               <x>210</x>
+               <y>20</y>
+               <width>62</width>
+               <height>21</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_area">
+             <property name="geometry">
+              <rect>
+               <x>210</x>
+               <y>50</y>
+               <width>62</width>
+               <height>21</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="pushButton_WA">
+             <property name="geometry">
+              <rect>
+               <x>290</x>
+               <y>10</y>
+               <width>161</width>
+               <height>32</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Wenner Array (WA)</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="pushButton_DD">
+             <property name="geometry">
+              <rect>
+               <x>290</x>
+               <y>50</y>
+               <width>161</width>
+               <height>31</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Dipole-Dipole (DD)</string>
+             </property>
+            </widget>
+            <widget class="QGraphicsView" name="graphicsView_mesh">
+             <property name="geometry">
+              <rect>
+               <x>100</x>
+               <y>100</y>
+               <width>511</width>
+               <height>311</height>
+              </rect>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 255, 255);</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="pushButton_mesh_save">
+             <property name="geometry">
+              <rect>
+               <x>110</x>
+               <y>430</y>
+               <width>73</width>
+               <height>31</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Save</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="pushButton_next_to_inversion">
+             <property name="geometry">
+              <rect>
+               <x>530</x>
+               <y>430</y>
+               <width>71</width>
+               <height>32</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Next</string>
+             </property>
+            </widget>
+           </widget>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="Inversion">
+          <attribute name="title">
+           <string>Inversion</string>
+          </attribute>
+          <widget class="QPushButton" name="pushButton_inversion_apply">
+           <property name="geometry">
+            <rect>
+             <x>470</x>
+             <y>30</y>
+             <width>111</width>
+             <height>51</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Apply</string>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="pushButton_inversion_save">
+           <property name="geometry">
+            <rect>
+             <x>150</x>
+             <y>450</y>
+             <width>71</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Save</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_Lambda">
+           <property name="geometry">
+            <rect>
+             <x>250</x>
+             <y>50</y>
+             <width>61</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);</string>
+           </property>
+           <property name="text">
+            <string>Lambda</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_dPhi">
+           <property name="geometry">
+            <rect>
+             <x>250</x>
+             <y>80</y>
+             <width>61</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);
+text-align: center;</string>
+           </property>
+           <property name="text">
+            <string>dPhi</string>
+           </property>
+          </widget>
+          <widget class="QGraphicsView" name="graphicsView_inversion">
+           <property name="geometry">
+            <rect>
+             <x>140</x>
+             <y>120</y>
+             <width>511</width>
+             <height>311</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(255, 255, 255);</string>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="pushButton_next_to_watercontent">
+           <property name="geometry">
+            <rect>
+             <x>560</x>
+             <y>450</y>
+             <width>71</width>
+             <height>32</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Next</string>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="spinBox_Iterations">
+           <property name="geometry">
+            <rect>
+             <x>330</x>
+             <y>20</y>
+             <width>40</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="value">
+            <number>5</number>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="spinBox_dPhi">
+           <property name="geometry">
+            <rect>
+             <x>330</x>
+             <y>80</y>
+             <width>40</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="value">
+            <number>1</number>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="spinBox_Lambda">
+           <property name="geometry">
+            <rect>
+             <x>330</x>
+             <y>50</y>
+             <width>40</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="value">
+            <number>5</number>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_iterations">
+           <property name="geometry">
+            <rect>
+             <x>250</x>
+             <y>20</y>
+             <width>61</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);</string>
+           </property>
+           <property name="text">
+            <string>Iterations</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="Water_content">
+          <attribute name="title">
+           <string>Water Content</string>
+          </attribute>
+          <widget class="QDoubleSpinBox" name="doubleSpinBox_Temperature">
+           <property name="geometry">
+            <rect>
+             <x>360</x>
+             <y>40</y>
+             <width>61</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="decimals">
+            <number>1</number>
+           </property>
+           <property name="singleStep">
+            <double>0.100000000000000</double>
+           </property>
+           <property name="value">
+            <double>25.000000000000000</double>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="pushButton_watercontent_calculate">
+           <property name="geometry">
+            <rect>
+             <x>150</x>
+             <y>450</y>
+             <width>81</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Calculate</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_Temperature">
+           <property name="geometry">
+            <rect>
+             <x>240</x>
+             <y>50</y>
+             <width>91</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);</string>
+           </property>
+           <property name="text">
+            <string>Temperature</string>
+           </property>
+          </widget>
+          <widget class="QGraphicsView" name="graphicsView_watercontent">
+           <property name="geometry">
+            <rect>
+             <x>140</x>
+             <y>120</y>
+             <width>511</width>
+             <height>311</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(255, 255, 255);</string>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="pushButton_next_to_vis">
+           <property name="geometry">
+            <rect>
+             <x>560</x>
+             <y>450</y>
+             <width>71</width>
+             <height>32</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Next</string>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="pushButton_import_soil_field">
+           <property name="geometry">
+            <rect>
+             <x>460</x>
+             <y>40</y>
+             <width>201</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Import Soil Temperatue Field</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="Visualization">
+          <attribute name="title">
+           <string>Visualization</string>
+          </attribute>
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <item>
+            <widget class="QTabWidget" name="tabWidget_3">
+             <property name="currentIndex">
+              <number>1</number>
+             </property>
+             <widget class="QWidget" name="Vis_resistivity">
+              <attribute name="title">
+               <string>Resistivity</string>
+              </attribute>
+              <widget class="QRadioButton" name="radioButton_vis_res_ani">
+               <property name="geometry">
+                <rect>
+                 <x>120</x>
+                 <y>10</y>
+                 <width>161</width>
+                 <height>20</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Time Lapse Animation</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_resistivity_file">
+               <property name="geometry">
+                <rect>
+                 <x>120</x>
+                 <y>40</y>
+                 <width>91</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+               </property>
+               <property name="text">
+                <string>File Selection</string>
+               </property>
+              </widget>
+              <widget class="QListView" name="listView_vis_res_pic">
+               <property name="geometry">
+                <rect>
+                 <x>120</x>
+                 <y>70</y>
+                 <width>171</width>
+                 <height>281</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 255, 255);</string>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="pushButton_vis_res_apply">
+               <property name="geometry">
+                <rect>
+                 <x>120</x>
+                 <y>360</y>
+                 <width>171</width>
+                 <height>31</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Apply</string>
+               </property>
+              </widget>
+              <widget class="QGraphicsView" name="graphicsView_vis_resistivity">
+               <property name="geometry">
+                <rect>
+                 <x>300</x>
+                 <y>70</y>
+                 <width>331</width>
+                 <height>281</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 255, 255);</string>
+               </property>
+              </widget>
+             </widget>
+             <widget class="QWidget" name="Vis_water_content">
+              <attribute name="title">
+               <string>Water content</string>
+              </attribute>
+              <widget class="QRadioButton" name="radioButton_vis_water_ani">
+               <property name="geometry">
+                <rect>
+                 <x>120</x>
+                 <y>10</y>
+                 <width>161</width>
+                 <height>20</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Time Lapse Animation</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_water_file">
+               <property name="geometry">
+                <rect>
+                 <x>120</x>
+                 <y>40</y>
+                 <width>91</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+               </property>
+               <property name="text">
+                <string>File Selection</string>
+               </property>
+              </widget>
+              <widget class="QListView" name="listView_vis_water_pic">
+               <property name="geometry">
+                <rect>
+                 <x>120</x>
+                 <y>70</y>
+                 <width>171</width>
+                 <height>281</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 255, 255);</string>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="pushButton_vis_water_apply">
+               <property name="geometry">
+                <rect>
+                 <x>120</x>
+                 <y>360</y>
+                 <width>171</width>
+                 <height>31</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Apply</string>
+               </property>
+              </widget>
+              <widget class="QGraphicsView" name="graphicsView_vis_watercontent">
+               <property name="geometry">
+                <rect>
+                 <x>300</x>
+                 <y>70</y>
+                 <width>331</width>
+                 <height>281</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 255, 255);</string>
+               </property>
+              </widget>
+             </widget>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>825</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionGuidline"/>
+    <addaction name="actionContract"/>
+   </widget>
+   <addaction name="menuHelp"/>
+  </widget>
+  <action name="actionNew">
+   <property name="text">
+    <string>New</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionGuidline">
+   <property name="text">
+    <string>Guidline</string>
+   </property>
+  </action>
+  <action name="actionContract">
+   <property name="text">
+    <string>Contract</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>pushButton_importfile</sender>
+   <signal>clicked()</signal>
+   <receiver>listWidget_file_list</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>283</x>
+     <y>140</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>283</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_Import</sender>
+   <signal>clicked()</signal>
+   <receiver>tabWidget_Data</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>320</x>
+     <y>140</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>627</x>
+     <y>366</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_next_to_domain</sender>
+   <signal>clicked()</signal>
+   <receiver>tabWidget_Importing</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>744</x>
+     <y>338</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>649</x>
+     <y>359</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_Transfer_Data</sender>
+   <signal>clicked()</signal>
+   <receiver>textBrowser_showdata</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>722</x>
+     <y>264</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>427</x>
+     <y>329</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
