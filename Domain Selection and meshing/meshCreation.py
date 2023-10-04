@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -261,175 +262,129 @@ class Ui_MainWindow(object):
         self.tabWidget_4.addTab(self.Visualization_2, "")
         self.horizontalLayout_3.addWidget(self.tabWidget_4)
         self.meshView = QtWidgets.QTabWidget(self.Domain_Mesh)
-        self.meshView.setGeometry(QtCore.QRect(0, 0, 781, 571))
+        self.meshView.setGeometry(QtCore.QRect(0, 10, 781, 571))
         font = QtGui.QFont()
         font.setPointSize(8)
+
 
         # UI design for the part of creating a Domain
         self.meshView.setFont(font)
         self.meshView.setObjectName("meshView")
-        mesh_view_layout = self.meshView.layout()
-        self.Mesh = QtWidgets.QWidget()
-        self.Mesh.setObjectName("Mesh")
-        self.start = QtWidgets.QTextEdit(self.Mesh)
-        self.start.setGeometry(QtCore.QRect(200, 40, 131, 41))
+        self.Domain = QtWidgets.QWidget()
+        self.Domain.setObjectName("Domain")
+        self.start = QtWidgets.QTextEdit(self.Domain)
+        self.start.setGeometry(QtCore.QRect(200, 30, 131, 41))
         self.start.setObjectName("start")
-        self.end = QtWidgets.QTextEdit(self.Mesh)
-        self.end.setGeometry(QtCore.QRect(200, 90, 131, 41))
+        self.end = QtWidgets.QTextEdit(self.Domain)
+        self.end.setGeometry(QtCore.QRect(200, 80, 131, 41))
         self.end.setObjectName("end")
-        self.startY = QtWidgets.QSpinBox(self.Mesh)
-        self.startY.setGeometry(QtCore.QRect(350, 60, 51, 21))
+        self.startY = QtWidgets.QSpinBox(self.Domain)
+        self.startY.setGeometry(QtCore.QRect(350, 50, 51, 21))
         self.startY.setObjectName("startY")
-        self.startY.setMinimum(0)
-        self.startY.setMaximum(10)
-        self.startX = QtWidgets.QSpinBox(self.Mesh)
-        self.startX.setGeometry(QtCore.QRect(350, 40, 51, 21))
-        self.startX.setObjectName("startX")
-        self.startX.setSizePolicy(sizePolicy)
-        self.startX.setMinimum(0)
-        self.startX.setMaximum(10)
+        self.startX = QtWidgets.QSpinBox(self.Domain)
+        self.startX.setGeometry(QtCore.QRect(350, 30, 51, 21))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Maximum)
         sizePolicy.setHorizontalStretch(100)
         sizePolicy.setVerticalStretch(4)
         sizePolicy.setHeightForWidth(self.startX.sizePolicy().hasHeightForWidth())
-        self.endX = QtWidgets.QSpinBox(self.Mesh)
-        self.endX.setGeometry(QtCore.QRect(350, 90, 51, 21))
-        self.endX.setObjectName("endX")
-        self.endX.setMinimum(-8)
-        self.endX.setMaximum(47)
+        self.startX.setSizePolicy(sizePolicy)
+        self.startX.setObjectName("startX")
+        self.endX = QtWidgets.QSpinBox(self.Domain)
+        self.endX.setGeometry(QtCore.QRect(350, 80, 51, 21))
         self.endX.setMinimumSize(QtCore.QSize(51, 21))
-        self.endY = QtWidgets.QSpinBox(self.Mesh)
-        self.endY.setGeometry(QtCore.QRect(350, 110, 51, 21))
-        self.endY.setObjectName("endY")
+        self.endX.setMinimum(-8)
+        self.endX.setMaximum(50)
+        self.endX.setObjectName("endX")
+        self.endY = QtWidgets.QSpinBox(self.Domain)
+        self.endY.setGeometry(QtCore.QRect(350, 100, 51, 21))
         self.endY.setMinimum(-8)
-        self.endY.setMaximum(47)
+        self.endY.setMaximum(50)
+        self.endY.setObjectName("endY")
+
 
         # Apply button for Domain
-        self.applyButton_1 = QtWidgets.QPushButton(self.Mesh)
-        self.applyButton_1.setGeometry(QtCore.QRect(440, 30, 161, 51))
-        self.applyButton_1.setObjectName("applyButton_1")
+        self.applyButton = QtWidgets.QPushButton(self.Domain)
+        self.applyButton.setGeometry(QtCore.QRect(420, 20, 161, 51))
         font = QtGui.QFont()
         font.setPointSize(7)
-
-        # Save button for Domain
-        self.saveButton_1 = QtWidgets.QPushButton("Save", self.Mesh)
-        self.saveButton_1.setGeometry(QtCore.QRect(440, 90, 161, 51))
-        self.saveButton_1.setObjectName("saveButton_1")
-        self.saveButton_1.clicked.connect(self.save)
+        self.applyButton.setFont(font)
+        self.applyButton.setObjectName("applyButton")
 
         # Present the figure of Domain
-        self.domainView = QtWidgets.QGraphicsView(self.Mesh)
-        self.domainView.setGeometry(QtCore.QRect(150, 161, 500, 350))
+        self.domainView = QtWidgets.QGraphicsView(self.Domain)
+        self.domainView.setGeometry(QtCore.QRect(20, 150, 711, 311))
         self.domainView.setObjectName("domainView")
         domainView_layout = QtWidgets.QVBoxLayout(self.domainView)
         self.canvas_domain = FigureCanvas(plt.figure())
         domainView_layout.addWidget(self.canvas_domain)
-        self.applyButton_1.clicked.connect(self.create_domain)
+        self.applyButton.clicked.connect(self.create_domain)
 
-        # UI design for the part of creating a Mesh
-        self.meshView.addTab(self.Mesh, "")
-        self.Mesh1 = QtWidgets.QWidget()
-        self.Mesh1.setObjectName("Mesh1")
-        self.quality_para = QtWidgets.QTextEdit(self.Mesh1)
-        self.quality_para.setGeometry(QtCore.QRect(200, 40, 131, 41))
-        self.quality_para.setObjectName("quality_para")
-        self.area_para = QtWidgets.QTextEdit(self.Mesh1)
-        self.area_para.setGeometry(QtCore.QRect(200, 90, 131, 41))
-        self.area_para.setObjectName("area_para")
-        self.quality = QtWidgets.QDoubleSpinBox(self.Mesh1)
-        self.quality.setGeometry(QtCore.QRect(350, 45, 62, 22))
-        self.quality.setSingleStep(0.01)
-        self.quality.setObjectName("quality")
-        self.quality.setMinimum(0)
-        self.quality.setMaximum(50)
-        self.area = QtWidgets.QDoubleSpinBox(self.Mesh1)
-        self.area.setGeometry(QtCore.QRect(350, 100, 62, 22))
-        self.area.setSingleStep(0.01)
-        self.area.setObjectName("area")
-        self.area.setMinimum(0)
-        self.area.setMaximum(1)
-
-        # Apply button for Mesh
-        self.applyButton_2 = QtWidgets.QPushButton(self.Mesh1)
-        self.applyButton_2.setGeometry(QtCore.QRect(440, 30, 161, 51))
+        # Save button for Domain
+        self.saveButton_1 = QtWidgets.QPushButton(self.Domain)
+        self.saveButton_1.setGeometry(QtCore.QRect(420, 80, 161, 51))
         font = QtGui.QFont()
         font.setPointSize(7)
-        self.applyButton_2.setFont(font)
-        self.applyButton_2.setObjectName("applyButton_2")
-        self.applyButton_2.clicked.connect(self.create_mesh)
+        self.saveButton_1.setFont(font)
+        self.saveButton_1.setObjectName("saveButton_1")
+        self.saveButton_1.clicked.connect(self.save)
+
+        # UI design for the part of creating a Mesh
+        self.meshView.addTab(self.Domain, "")
+        self.Mesh = QtWidgets.QWidget()
+        self.Mesh.setObjectName("Mesh")
+        self.quality_para = QtWidgets.QTextEdit(self.Mesh)
+        self.quality_para.setGeometry(QtCore.QRect(120, 30, 131, 41))
+        self.quality_para.setObjectName("quality_para")
+        self.area_para = QtWidgets.QTextEdit(self.Mesh)
+        self.area_para.setGeometry(QtCore.QRect(120, 80, 131, 41))
+        self.area_para.setObjectName("area_para")
+        self.quality = QtWidgets.QDoubleSpinBox(self.Mesh)
+        self.quality.setGeometry(QtCore.QRect(270, 40, 62, 22))
+        self.quality.setMinimum(15.0)
+        self.quality.setMaximum(50.0)
+        self.quality.setSingleStep(0.01)
+        self.quality.setProperty("value", 15.0)
+        self.quality.setObjectName("quality")
+        self.area = QtWidgets.QDoubleSpinBox(self.Mesh)
+        self.area.setGeometry(QtCore.QRect(270, 90, 62, 22))
+        self.area.setMaximum(1.0)
+        self.area.setSingleStep(0.01)
+        self.area.setObjectName("area")
 
         # Save button for Mesh
-        self.saveButton_2 = QtWidgets.QPushButton("Save", self.Mesh1)
-        self.saveButton_2.setGeometry(QtCore.QRect(440, 90, 161, 51))
+        self.saveButton_2 = QtWidgets.QPushButton(self.Mesh)
+        self.saveButton_2.setGeometry(QtCore.QRect(510, 50, 161, 51))
+        font = QtGui.QFont()
+        font.setPointSize(7)
+        self.saveButton_2.setFont(font)
         self.saveButton_2.setObjectName("saveButton_2")
-        self.saveButton_2.clicked.connect(self.save)
 
         # Present the figure of Mesh
-        self.meshView.addTab(self.Mesh1, "")
-        self.domainView_2 = QtWidgets.QGraphicsView(self.Mesh1)
-        self.domainView_2.setGeometry(QtCore.QRect(150, 161, 500, 350))
+        self.domainView_2 = QtWidgets.QGraphicsView(self.Mesh)
+        self.domainView_2.setGeometry(QtCore.QRect(30, 160, 711, 301))
         self.domainView_2.setObjectName("domainView_2")
-        domainView_2_layout = QtWidgets.QVBoxLayout(self.domainView_2)
-        self.canvas_mesh = FigureCanvas(plt.figure())
-        domainView_2_layout.addWidget(self.canvas_mesh)
-        self.applyButton_1.clicked.connect(self.create_mesh)
 
-        # The QWidget of Resistivity Measurement Method
-        self.RMM = QtWidgets.QWidget()
-        self.RMM.setObjectName("RMM")
-
-        # Apply button for Wenner Array method
-        self.waButton = QtWidgets.QPushButton(self.RMM)
-        self.waButton.setGeometry(QtCore.QRect(210, 50, 111, 31))
+        # Apply button for Wenner Array and Dipole-Dipole methods
+        self.waButton = QtWidgets.QPushButton(self.Mesh)
+        self.waButton.setGeometry(QtCore.QRect(360, 30, 131, 41))
         font = QtGui.QFont()
         font.setPointSize(8)
         self.waButton.setFont(font)
         self.waButton.setObjectName("waButton")
         self.waButton.clicked.connect(self.wa_method)
-
-        # Present the figure of Wenner Array method
-        self.domainView_3 = QtWidgets.QGraphicsView(self.RMM)
-        self.domainView_3.setGeometry(QtCore.QRect(80, 110, 561, 301))
-        self.domainView_3.setObjectName("domainView_3")
-        self.meshView.addTab(self.RMM, "")
-        self.meshView.raise_()
-        self.verticalWidget_2.raise_()
-        self.tabWidget.addTab(self.Domain_Mesh, "")
-        self.fig, self.ax = plt.subplots()
-        self.canvas_wa = FigureCanvas(self.fig)
-        domainView_3_layout = QtWidgets.QVBoxLayout(self.domainView_3)
-        domainView_3_layout.addWidget(self.canvas_wa)
-
-        # Apply button for Dipole-Dipole method
-        self.ddButton = QtWidgets.QPushButton(self.RMM)
-        self.ddButton.setGeometry(QtCore.QRect(390, 50, 121, 31))
+        self.ddButton = QtWidgets.QPushButton(self.Mesh)
+        self.ddButton.setGeometry(QtCore.QRect(360, 80, 131, 41))
         font = QtGui.QFont()
         font.setPointSize(8)
         self.ddButton.setFont(font)
         self.ddButton.setObjectName("ddButton")
         self.ddButton.clicked.connect(self.dd_method)
-
-        # Present the figure of Dipole-Dipole method
-        self.domainView_3 = QtWidgets.QGraphicsView(self.RMM)
-        self.domainView_3.setGeometry(QtCore.QRect(80, 110, 561, 301))
-        self.domainView_3.setObjectName("domainView_3")
-        self.meshView.addTab(self.RMM, "")
+        self.meshView.addTab(self.Mesh, "")
         self.meshView.raise_()
         self.verticalWidget_2.raise_()
         self.tabWidget.addTab(self.Domain_Mesh, "")
-        self.fig, self.ax = plt.subplots()
-        self.canvas_dd = FigureCanvas(self.fig)
-        domainView_3_layout = QtWidgets.QVBoxLayout(self.domainView_3)
-        domainView_3_layout.addWidget(self.canvas_dd)
 
-        '''Next button to jump to the next page'''
-        '''
-        self.pushButton_4 = QtWidgets.QPushButton(self.RMM)
-        self.pushButton_4.setGeometry(QtCore.QRect(450, 55, 91, 31))
-        self.pushButton_4.setStyleSheet("")
-        self.pushButton_4.setObjectName("pushButton_4")
-        self.pushButton_4.clicked.connect(self.jump_to_next_page)
-        '''
+
 
         self.Inversion = QtWidgets.QWidget()
         self.Inversion.setObjectName("Inversion")
@@ -557,15 +512,16 @@ class Ui_MainWindow(object):
         self.tabWidget_4.setCurrentIndex(1)
         self.tabWidget_5.setCurrentIndex(0)
         self.tabWidget_6.setCurrentIndex(1)
-        self.meshView.setCurrentIndex(2)
+        self.meshView.setCurrentIndex(1)
         self.tabWidget_3.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+
     '''
-    Below is the code for creating a domain and mesh, and selecting the method of resistivity measurement.
-    First page: Enter the value of Start point and End point to generate a domain figure
-    Second page: Enter the value of quality and area to generate a mesh figure
-    Third page: Click the button to select the different resistivity measurement methods  
+        Below is the code for creating a domain and mesh, and selecting the method of resistivity measurement.
+        First page: Enter the value of Start point and End point to generate a domain figure
+        Second page: Enter the value of quality and area to generate a mesh figure
+        Third page: Click the button to select the different resistivity measurement methods  
     '''
 
     def create_domain(self):
@@ -575,9 +531,11 @@ class Ui_MainWindow(object):
         end_x = self.endX.value()
         end_y = self.endY.value()
 
-        self.geom = pg.meshtools.createWorld(start=[start_x, start_y], end=[end_x, end_y], worldMarker=False)
+        self.geom = pg.meshtools.createWorld(start=[start_x, end_y], end=[end_x, start_y], worldMarker=False)
         ax = self.canvas_domain.figure.add_subplot(111)
         ax.clear()
+
+        ax.yaxis.set_major_locator(plt.MultipleLocator(2.0))
 
         pg.show(self.geom, ax=ax, boundary=True)
         self.canvas_domain.draw()
@@ -588,23 +546,23 @@ class Ui_MainWindow(object):
         quality = self.quality.value()
         area = self.area.value()
 
-        mesh = mt.createMesh(self.geom, quality, area, smooth=True)
+        self.mesh = mt.createMesh(self.geom, quality, area, smooth=True)
         ab = self.canvas_mesh.figure.add_subplot(111)
         ab.clear()
 
-        pg.show(mesh, ax=ab, boundary=True)
+        pg.show(self.mesh, ax=ab, boundary=True)
         self.canvas_mesh.draw()
 
     # Function to save generated figures
     def save(self):
-        options = QtWidgets.QFileDialog.Options()
-        options |= QtWidgets.QFileDialog.ReadOnly
-        file_name, _ = QtWidgets.QFileDialog.getSaveFileName(
+            options = QtWidgets.QFileDialog.Options()
+            options |= QtWidgets.QFileDialog.ReadOnly
+            file_name, _ = QtWidgets.QFileDialog.getSaveFileName(
                     None, "Save Figure", "", "PNG Files (*.png);;All Files (*)", options=options
             )
-        if file_name:
-                # Save the figure as a PNG file
-                self.geom.savefig(file_name, format="png")
+            if file_name:
+                    # Save the figure as a PNG file
+                    self.geom.savefig(file_name, format="png")
 
     # Create a function to select Wenner Array Measurement Method
     def wa_method(self):
@@ -702,8 +660,9 @@ class Ui_MainWindow(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:8pt;\">End</span></p></body></html>"))
-        self.applyButton_1.setText(_translate("MainWindow", "Apply"))
-        self.meshView.setTabText(self.meshView.indexOf(self.Mesh), _translate("MainWindow", "Domain"))
+        self.applyButton.setText(_translate("MainWindow", "Apply"))
+        self.saveButton_1.setText(_translate("MainWindow", "Save"))
+        self.meshView.setTabText(self.meshView.indexOf(self.Domain), _translate("MainWindow", "Domain"))
         self.quality_para.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -714,12 +673,10 @@ class Ui_MainWindow(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:8pt;\">Area</span></p></body></html>"))
-        self.applyButton_2.setText(_translate("MainWindow", "Apply"))
-        self.meshView.setTabText(self.meshView.indexOf(self.Mesh1), _translate("MainWindow", "Mesh"))
+        self.saveButton_2.setText(_translate("MainWindow", "Save"))
         self.waButton.setText(_translate("MainWindow", "Wenner Array (WA)"))
         self.ddButton.setText(_translate("MainWindow", "Dipole-Dipole (DD)"))
-        ''' self.pushButton_4.setText(_translate("MainWindow", "Next")) '''
-        self.meshView.setTabText(self.meshView.indexOf(self.RMM), _translate("MainWindow", "Resistivity Measurement Method"))
+        self.meshView.setTabText(self.meshView.indexOf(self.Mesh), _translate("MainWindow", "Mesh"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.Domain_Mesh), _translate("MainWindow", "Domain and Mesh"))
         self.textEdit_8.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
@@ -762,12 +719,6 @@ class Ui_MainWindow(object):
         self.actionGuidline.setText(_translate("MainWindow", "Guidline"))
         self.actionContract.setText(_translate("MainWindow", "Contract"))
 
-    '''
-    def jump_to_next_page(self):
-            index_of_page = 2
-            # Switch to the desired page
-            self.tabWidget_Importing.setCurrentIndex(index_of_page)
-    '''
 
 if __name__ == "__main__":
     import sys
@@ -777,5 +728,3 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
-
-       
