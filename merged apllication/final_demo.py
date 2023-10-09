@@ -161,7 +161,29 @@ class Ui_MainWindow(object, ):
         self.spinBox_endY = QtWidgets.QSpinBox(self.Domain)
         self.spinBox_endY.setGeometry(QtCore.QRect(290, 50, 40, 21))
         self.spinBox_endY.setObjectName("spinBox_endY")
+       
+        self.spinBox_endX.setObjectName("spinBox_endX")
+        self.spinBox_endX.setMinimum(-8)
+        self.spinBox_endX.setMaximum(50)
+        self.spinBox_startY = QtWidgets.QSpinBox(self.Domain)
+        self.spinBox_startY.setGeometry(QtCore.QRect(290, 20, 40, 20))
+        self.spinBox_startY.setObjectName("spinBox_startY")
+        self.spinBox_startY.setMinimum(0)
+        self.spinBox_startY.setMaximum(99)
+        self.spinBox_endY = QtWidgets.QSpinBox(self.Domain)
+        self.spinBox_endY.setGeometry(QtCore.QRect(290, 50, 40, 21))
+        self.spinBox_endY.setObjectName("spinBox_endY")
+        self.spinBox_endY.setMinimum(-8)
+        self.spinBox_endY.setMaximum(50)
+       
+        
         self.tabWidget.addTab(self.Domain, "")
+
+
+
+
+
+
         self.Mesh = QtWidgets.QWidget()
         self.Mesh.setObjectName("Mesh")
         self.label_quality = QtWidgets.QLabel(self.Mesh)
@@ -180,16 +202,16 @@ class Ui_MainWindow(object, ):
         self.doubleSpinBox_area = QtWidgets.QDoubleSpinBox(self.Mesh)
         self.doubleSpinBox_area.setGeometry(QtCore.QRect(210, 50, 62, 21))
         self.doubleSpinBox_area.setObjectName("doubleSpinBox_area")
-        self.pushButton_WA = QtWidgets.QPushButton(self.Mesh)
-        self.pushButton_WA.setGeometry(QtCore.QRect(290, 10, 161, 32))
-        self.pushButton_WA.setObjectName("pushButton_WA")
-        self.pushButton_DD = QtWidgets.QPushButton(self.Mesh)
-        self.pushButton_DD.setGeometry(QtCore.QRect(290, 50, 161, 31))
-        self.pushButton_DD.setObjectName("pushButton_DD")
+
+        
         self.graphicsView_mesh = QtWidgets.QGraphicsView(self.Mesh)
         self.graphicsView_mesh.setGeometry(QtCore.QRect(100, 100, 511, 311))
         self.graphicsView_mesh.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.graphicsView_mesh.setObjectName("graphicsView_mesh")
+        graphicsView_mesh_layout = QtWidgets.QVBoxLayout(self.graphicsView_mesh)
+        self.canvas_mesh = FigureCanvas(plt.figure())
+        graphicsView_mesh_layout.addWidget(self.canvas_mesh)
+        
         self.pushButton_mesh_save = QtWidgets.QPushButton(self.Mesh)
         self.pushButton_mesh_save.setGeometry(QtCore.QRect(110, 430, 73, 31))
         self.pushButton_mesh_save.setObjectName("pushButton_mesh_save")
@@ -275,7 +297,7 @@ class Ui_MainWindow(object, ):
         
         
         self.graphicsView_watercontent = QtWidgets.QGraphicsView(self.Water_content)
-        self.graphicsView_watercontent.setGeometry(QtCore.QRect(140, 120, 511, 311))
+        self.graphicsView_watercontent.setGeometry(QtCore.QRect(50, 120, 711, 311))
         self.graphicsView_watercontent.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.graphicsView_watercontent.setObjectName("graphicsView_watercontent")
         self.scene = QGraphicsScene()
@@ -386,7 +408,8 @@ class Ui_MainWindow(object, ):
         self.pushButton_next_to_visualization.clicked.connect(self.jump_to_next_visualization)
 
         # domian and mesh part
-
+        self.pushButton_domain_apply.clicked.connect(self.create_domain)
+        self.pushButton_mesh_save.clicked.connect(self.create_mesh)
 
         # inversion part
         self.pushButton_inversion_apply.clicked.connect(self.startInversion)
@@ -453,6 +476,7 @@ class Ui_MainWindow(object, ):
         files, _ = QFileDialog.getOpenFileNames(self, "QFileDialog.getOpenFileNames()", "",
                                                 "All Files (*);;Python Files (*.py)", options=options)
         save_directory = QFileDialog.getExistingDirectory(self, "Select Directory")
+        print(f"Selected directory: {save_directory}")
         self.save_directory = save_directory
         if not save_directory:
             return
@@ -499,7 +523,7 @@ class Ui_MainWindow(object, ):
                 data = []
                 with open(input_file_path, 'r') as input_file:
                     lines = input_file.readlines()
-                    data = [line.strip().split() for line in lines[244:]]
+                    data = [line.strip().split() for line in lines[243:]]
 
                 selected_data = []
                 for row in data:
@@ -523,12 +547,13 @@ class Ui_MainWindow(object, ):
                     output_file.write("# a b m n rhoa\n")
                     for row in selected_data:
                         output_file.write("\t".join(row) + "\n")
-                self.output_file_path = output_file_path
-                return output_file_path
+            
+                return output_file_name
 
     def data_show(self):
-        output_file_path = self.data_transfer()
-        with open(output_file_path, 'r') as file:
+        output_file = self.data_transfer()
+        os.chdir(self.save_directory)
+        with open(output_file, 'r') as file:
             content = file.read()
         self.textBrowser_showdata.setPlainText(content)
 
@@ -549,10 +574,50 @@ class Ui_MainWindow(object, ):
     #domain and mesh part
     
 
+    def create_domain(self):
+        # Create a matrix using the values of start and end
+        start_x = self.spinBox_startX.value()
+        start_y = self.spinBox_startY.value()
+        end_x = self.spinBox_endX.value()
+        end_y = self.spinBox_endY.value()
 
+        self.geom = pg.meshtools.createWorld(start=[start_x, end_y], end=[end_x, start_y], worldMarker=False)
+        ax = self.canvas_domain.figure.add_subplot(111)
+        ax.clear()
+
+        ax.yaxis.set_major_locator(plt.MultipleLocator(2.0))
+
+        pg.show(self.geom, ax=ax, boundary=True)
+        self.canvas_domain.draw()
+
+    def create_mesh(self):
+        # Create a matrix using the values of quality and area
+        pg.show(self.geom, boundary=True)
+        quality = self.doubleSpinBox_quality.value()
+        area = self.doubleSpinBox_area.value()
+
+        self.mesh = mt.createMesh(self.geom, quality, area, smooth=True)
+        ab = self.canvas_mesh.figure.add_subplot(111)
+        ab.clear()
+
+        ab.yaxis.set_major_locator(plt.MultipleLocator(2.0))
+
+        pg.show(self.mesh, ax=ab, boundary=True)
+        self.canvas_mesh.draw()
+
+    # Function to save generated figures
+    def save(self):
+            options = QtWidgets.QFileDialog.Options()
+            options |= QtWidgets.QFileDialog.ReadOnly
+            file_name, _ = QtWidgets.QFileDialog.getSaveFileName(
+                    None, "Save Figure", "", "PNG Files (*.png);;All Files (*)", options=options
+            )
+            if file_name:
+                    # Save the figure as a PNG file
+                    self.geom.savefig(file_name, format="png")
 
     #inversion part
-    
+    #single file process
     def startInversion(self):
         # Read the values from the spin boxes
         maxIter = self.spinBox_Iterations.value()
@@ -564,18 +629,29 @@ class Ui_MainWindow(object, ):
         inv = mgr.invert(mesh=mesh, lam=lam, maxIter=6, dPhi=2, CHI1OPT=5, Verbose=True)
         mgr and mesh will inherit from previous sections: data processing and Domain selection/ meshing
         '''
-       
-        file_to_convert = 'C:/Users/ZQZHA/Desktop/5206 project/data/2022-07-07_09-00-00.txt'
+        print(f"Using directory: {self.save_directory}")
+    
+        file_to_convert = None  # Initialize to None
+        os.chdir(self.save_directory)
+        for file in os.listdir(self.save_directory):
+           if file.endswith('.txt'):
+               file_to_convert = file
+               break
+        
+
+
+        
 
         #Create Geometry and Mesh
-        geom = mt.createWorld(start=[0, 0], end=[47, -8], worldMarker=False)
-        mesh = mt.createMesh(geom, quality=33.5, area=0.5, smooth=True)
-        mesh.save("mesh.bms")
+        geom = self.geom
+        mesh = self.mesh
 
 
         # Inversion preparing 
         date = os.path.basename(file_to_convert)  # Extract the file name from the path
+        self.date = date
         mgr = ert.ERTManager(file_to_convert, verbose=True, debug=True)
+        self.mgr = mgr
         rhoa = np.array(mgr.data['rhoa'])
         Argw = np.argwhere(rhoa <= 0)
         pg.info('Filtered rhoa (min/max)', min(mgr.data['rhoa']), max(mgr.data['rhoa']))
@@ -591,7 +667,7 @@ class Ui_MainWindow(object, ):
         #ert.show(mgr.data)
 
         # Inversion here
-        inv = mgr.invert(mesh=mesh, lam=lam, maxIter=6, dPhi=2, CHI1OPT=5, Verbose=True)
+        inv = mgr.invert(mesh=mesh, lam=lam, maxIter=maxIter, dPhi=dPhi, CHI1OPT=5, Verbose=True)
 
         # Storing and saving data for later manipulation
         Storage = np.zeros([np.shape(mesh.cellMarkers())[0], 1])
@@ -607,6 +683,8 @@ class Ui_MainWindow(object, ):
         ax1.set_ylim(-8, mgr.paraDomain.ymax())
         ax1.set_title(labels)
         plt.tight_layout()
+        # automatic save
+        plt.savefig("result_resistivity.jpg")
 
         #plt.show()
         # Embed the generated figure in QWidget
@@ -660,161 +738,67 @@ class Ui_MainWindow(object, ):
     water content at a constant temperature of 25 degrees
     '''
     def watercomputing(self):
-            "ERT Inversion and Visualization process"
+         
 
-            folder = 'C:/Users/ZQZHA/Desktop/5206 project/data'  # Update this to reflect the folder lcoation
-            os.chdir(folder)
-
-            ''' Begin Workflow '''
-
-            # Iterate directory
-            entries_sel = []
-
-            for file in os.listdir():
-                    # check only text files
-                    if file.endswith('.txt'):
-                            entries_sel.append(file)
-
-            ''' Create Geometry and Mesh'''
-
-            geom = mt.createWorld(start=[0, 0], end=[47, -8],
-                                  worldMarker=False)  # We want to able to input the start and end
-            #pg.show(geom, boundaryMarker=True)
-            mesh = mt.createMesh(geom, quality=33.5, area=0.5,
-                                 smooth=True)  # We want to able to input the quality and area at least
+            geom = self.geom
+            mesh = self.mesh
             print("mesh", mesh)
-            mesh.save("mesh.bms")
-
             centers = mesh.cellCenters()
             x_coordinates = centers[:, 0]
             y_coordinates = centers[:, 1]
             np.shape(centers)
             print("x_coordinates", x_coordinates)
             print("y_coordinates", y_coordinates)
-            Storage = np.zeros([np.shape(mesh.cellMarkers())[0], np.shape(entries_sel)[0]])
-
-            ''' Begin Inversion '''
-
-            for i in range(0, len(entries_sel) - 1):
-
-                    date = entries_sel[i]
-                    mgr = ert.ERTManager(entries_sel[i], verbose=True, debug=True)  # load the file
-                    rhoa = np.array(mgr.data['rhoa'])  # convert resistivity data in numpy vector
-                    Argw = np.argwhere(rhoa <= 0)  # index of negative resistance
-                    #pg.info('Filtered rhoa (min/max)', min(mgr.data['rhoa']), max(mgr.data['rhoa']))
-                    #Accur = (1 - np.shape(Argw)[0] / np.shape(rhoa)[0]) * 100  # Percentage of Accuracy
-                    # as (1 - negative values/total values) * 100
-                    # Accur is something I'd like to be printed as information
-
-                    ''' Filter negative value '''
-
-                    mgr.data.remove(mgr.data[
-                                            "rhoa"] < 0)  # Remove the data directly (This should be ok with a fixed mesh created outside of the for cycle)
-
-                    ''' Add estimated Error and geometrical factor'''
-
-                    mgr.data['err'] = ert.estimateError(mgr.data, absoluteError=0.001,
-                                                        relativeError=0.03)  # Leave as it is for now
-                    pg.info('Filtered rhoa (min/max)', min(mgr.data['rhoa']), max(mgr.data['rhoa']))
-                    mgr.data['k'] = ert.createGeometricFactors(mgr.data, numerical=True)  # Leave as it is for now
-                    #ert.show(mgr.data)
-
-                    '''Inversion '''
-
-                    inv = mgr.invert(mesh=mesh, lam=10, maxIter=6, dPhi=2, CHI1OPT=5,
-                                     Verbose=True)  # We want to able to input
-                    # maxIter, Lam, dPhi
-
-                    # More complex way of inverting. WE WILL Look at it later
-
-                    # inv = mgr.invert(secNodes=2,SURFACESMOOTH=1,paraDX=0.5,TOPOGRAPHY=1, PARA2DQUALITY=33.8,EQUIDISTBOUNDARY=1, paraMaxCellSize=2.0,
-                    #                 maxIter=20, LAMBDA=30, CHI1OPT=2, verbose=True)
-
-                    # np.testing.assert_approx_equal(mgr.inv._inv.chi2(),2)  assessing the quality of the inversion with Chi^2 metric
-
-                    '''Storing and saving data for later manipulation'''
-
-                    Storage[:, i] = inv  # Save in Variable for manipulation
-                    mgr.saveResult(date[:-4])  # Save results in folder
-                    print("12", mgr.saveResult(date[:-4]))
-                    print(Storage)
-                    '''Plotting'''
-
-                    # fig1, (ax1) = plt.subplots(1, sharex=(True), figsize=(16.0, 5))
-                    # mgr.showResult(ax=ax1, cMin=50, cMax=15000)
-                    # labels = date
-                    # ax1.set_xlim(-0, mgr.paraDomain.xmax())
-                    # ax1.set_ylim(-8, mgr.paraDomain.ymax())
-                    # ax1.set_title(labels)
-                    # plt.tight_layout()
-                    # plt.close()
-
-                    ##%%
-
-                    '''Converting resistivity to soil water content and visualize'''
-                    # pg.viewer.showMesh(mesh,data=Storage[:,1]-Storage[:,0])
-                    fSWC = lambda x: 246.47 * x ** (-0.627)
-                    fSWC_2 = lambda x: 211 * x ** (-0.59)
-
-                    # temperature
-                    # Define the temperature points
-                    # temperature_points = [
-                    #         (0, -5),
-                    #         (-10, -5)
-                    # ]
-                    global tem_field
-                    print("t111111111111111",tem_field)
-                    temperature_points = tem_field
-                    temperature_points.sort(key=lambda x: x[0])
-                    for j in range(len(y_coordinates) - 1):
-                            y = y_coordinates[j]
-                            # Find the temperature segment the current belongs to
-                            for i in range(len(temperature_points) - 1):
-                                    y1, T1 = temperature_points[i]
-                                    y2, T2 = temperature_points[i + 1]
-                                    if y1 <= y <= y2:
-                                            # Linearly interpolate the temperature value
-                                            T = T1 + (T2 - T1) * ((y - y1) / (y2 - y1))
-                                            break
-                                    else:
-                                            # If y is out of bounds of the temperature points, use the nearest boundary value
-                                            T = T1 if y < y1 else T2
-                            Storage[j, :] = (1 + 0.025 * (T - 25)) * Storage[j, :]
-
-                    # T = 25.5
-                    # Storage1 = (1 + 0.025 * (T - 25))*Storage
-                    # SWC = fSWC(Storage1)
-
-                    SWC = fSWC(Storage)
-
-                    print("11111111111")
-                    print(Storage)
-
-                    fig1, (ax1) = plt.subplots(1, sharex=(True), figsize=(15.5, 7), gridspec_kw={'height_ratios': [2]})
-                    # plt.close()
-                    pg.viewer.show(mesh=mesh, data=SWC[:, 0], hold=True, label='Soil water content', ax=ax1, cMin=0,
-                                   cMax=30,
-                                   cMap='Spectral', showMesh=True)
-                    print("12321321131321")
-
-                    labels = date
-                    ax1.set_xlim(-0, mgr.paraDomain.xmax())
-                    ax1.set_ylim(-8, mgr.paraDomain.ymax())
-                    ax1.set_title(labels)
-                    plt.savefig('result_water_content.jpg')
-                    plt.close()
-                    print("end")
-                    # plt.tight_layout()
-                    # plt.show()
+            
+            Storage = self.Storage
+            fSWC = lambda x: 246.47 * x ** (-0.627)
+            fSWC_2 = lambda x: 211 * x ** (-0.59)
+            
+            
+            global tem_field
+            print("t111111111111111",tem_field)
+            temperature_points = tem_field
+            T = 25.5
+            temperature_points.sort(key=lambda x: x[0])
+            for j in range(len(y_coordinates) - 1):
+                    y = y_coordinates[j]
+                    # Find the temperature segment the current belongs to
+                    for i in range(len(temperature_points) - 1):
+                            y1, T1 = temperature_points[i]
+                            y2, T2 = temperature_points[i + 1]
+                            if y1 <= y <= y2:
+                                    # Linearly interpolate the temperature value
+                                    T = T1 + (T2 - T1) * ((y - y1) / (y2 - y1))
+                                    break
+                            else:
+                                    # If y is out of bounds of the temperature points, use the nearest boundary value
+                                    T = T1 if y < y1 else T2
+                    Storage[j, :] = (1 + 0.025 * (T - 25)) * Storage[j, :]
 
 
+            SWC = fSWC(Storage)
 
-        # plt.savefig('result_water_content.jpg')
-        # result=fig1
-        # self.result=result
-        #
-        # plt.tight_layout()
-        # plt.show()
+            print("11111111111")
+            print(Storage)
+
+            fig1, (ax1) = plt.subplots(1, sharex=(True), figsize=(15.5, 7), gridspec_kw={'height_ratios': [2]})
+            # plt.close()
+            pg.viewer.show(mesh=mesh, data=SWC[:, 0], hold=True, label='Soil water content', ax=ax1, cMin=0,
+                           cMax=30,
+                           cMap='Spectral', showMesh=True)
+            print("12321321131321")
+
+            labels = self.date
+            ax1.set_xlim(-0, self.mgr.paraDomain.xmax())
+            ax1.set_ylim(-8, self.mgr.paraDomain.ymax())
+            ax1.set_title(labels)
+            plt.savefig('result_water_content.jpg')
+            plt.close()
+            print("end")
+
+
+            
+
     
     def update_variable(self, value):
         self.my_variable = value
@@ -849,13 +833,23 @@ class Ui_MainWindow(object, ):
         self.pushButton_domain_apply.setText(_translate("MainWindow", "Apply"))
         self.pushButton_next_to_mesh.setText(_translate("MainWindow", "Next"))
         self.pushButton_domain_save.setText(_translate("MainWindow", "Save"))
+        self.pushButton_domain_save.setToolTip(_translate("MainWindow",
+                                               "<html><head/><body><p>Save the figure to your local directory</p></body></html>"))
         self.label_start.setText(_translate("MainWindow", "Start"))
+        self.label_start.setToolTip(_translate("MainWindow",
+                                             "<html><head/><body><p>The starting point of the domain. The position of the x-axis and y-axis are typically set to 0.</p></body></html>"))
         self.label_end.setText(_translate("MainWindow", "End"))
+        self.label_end.setToolTip(_translate("MainWindow",
+                                               "<html><head/><body><p>The ending point of the domain. The position of the x-axis is typically set to 47, y-axis is typically set to -8.</p></body></html>"))
+        
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.Domain), _translate("MainWindow", "Domain"))
         self.label_quality.setText(_translate("MainWindow", "Quality"))
+        self.label_quality.setToolTip(_translate("MainWindow",
+                                               "<html><head/><body><p>Determine the grid quality, including element shape, size, and smoothness</p></body></html>"))
         self.label_area.setText(_translate("MainWindow", "Area"))
-        self.pushButton_WA.setText(_translate("MainWindow", "Wenner Array (WA)"))
-        self.pushButton_DD.setText(_translate("MainWindow", "Dipole-Dipole (DD)"))
+        self.label_area.setToolTip(_translate("MainWindow",
+                                                 "<html><head/><body><p>Control the area of individual mesh elements</p></body></html>"))
+        
         self.pushButton_mesh_save.setText(_translate("MainWindow", "Save"))
         self.pushButton_next_to_inversion.setText(_translate("MainWindow", "Next"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.Mesh), _translate("MainWindow", "Mesh"))
@@ -949,6 +943,7 @@ class MyMainWindow_Vis(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
 
         self.timer = QTimer(self)
+        #self.workingdorectory = None
 
 
         self.scene_Vis_Res_Ani = QtWidgets.QGraphicsScene(self)
@@ -959,14 +954,14 @@ class MyMainWindow_Vis(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def vis_res_load_local_images(self):
             for file_name in os.listdir():
-                    if file_name.endswith('_res.png'):
-                            self.listWidget_vis_res_pic.addItem(file_name)
+                if file_name.endswith('_res.png'):
+                    self.listWidget_vis_res_pic.addItem(file_name)
 
 
     def vis_wat_load_local_images(self):
             for file_name in os.listdir():
-                    if file_name.endswith('_wat.png'):
-                           self.listWidget_vis_water_pic.addItem(file_name)
+                if file_name.endswith('_wat.png'):
+                    self.listWidget_vis_water_pic.addItem(file_name)
 
 
 
