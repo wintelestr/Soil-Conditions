@@ -142,6 +142,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addLayout(self.horizontalLayout_3)
         self.tabWidget.addTab(self.Domain_Mesh, "")
 
+        self.label_start = QtWidgets.QLabel(MainWindow)  # Example QLabel widget
+
         '''
         Below is the code for the section of window Inversion, 
         including 3 spin boxes to let user select values for maxIteration times, lambda and dPhi
@@ -204,6 +206,8 @@ class Ui_MainWindow(object):
         self.pushButton_5 = QtWidgets.QPushButton(self.Inversion)
         self.pushButton_5.setGeometry(QtCore.QRect(440, 10, 111, 41))
         self.pushButton_5.setObjectName("pushButton_5")
+        #Add tooltip/explanation for Apply button
+        self.pushButton_5.setToolTip("Start inverting the imported data to generate the soil resistivity distribution map <br> after choosing the value for each parameter of inversion algorithm.")
 
         ''' New added inversion function'''
         self.pushButton_5.clicked.connect(self.startInversion)
@@ -212,6 +216,8 @@ class Ui_MainWindow(object):
         self.pushButton_9 = QtWidgets.QPushButton(self.Inversion)
         self.pushButton_9.setGeometry(QtCore.QRect(440, 60, 111, 41))
         self.pushButton_9.setObjectName("pushButton_9")
+        #Add tooltip/explanation for Save button
+        self.pushButton_9.setToolTip("Save the inverted soil resistivity distribution map.<br>")
         self.pushButton_9.clicked.connect(self.saveFig)
         self.listView_3 = QtWidgets.QListView(self.Inversion)
         self.listView_3.setGeometry(QtCore.QRect(30, 110, 711, 431))
@@ -439,16 +445,21 @@ class Ui_MainWindow(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:12pt;\">Iterations</span></p></body></html>"))
+        self.textEdit_8.setToolTip("Maximum number of iterations for the inversion algorithm.<br>")
         self.textEdit_9.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:12pt;\">Lambda</span></p></body></html>"))
+        self.textEdit_9.setToolTip("Lambda controls the smoothness of the inverted model.<br> It helps prevent overfitting by penalizing complex models.")
+
         self.textEdit_10.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\'; font-size:12pt;\">dPhi</span></p></body></html>"))
+        self.textEdit_10.setToolTip("Delta Phi determines the allowable change in resistivity between neighboring cells in the model.<br>")
+
         self.pushButton_5.setText(_translate("MainWindow", "Apply"))
         self.pushButton_9.setText(_translate("MainWindow", "Save"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.Inversion), _translate("MainWindow", "Inversion"))
