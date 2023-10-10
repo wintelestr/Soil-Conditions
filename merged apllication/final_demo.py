@@ -941,22 +941,15 @@ class MyMainWindow_Vis(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MyMainWindow_Vis, self).__init__(parent)
         self.setupUi(self)
-
         self.timer = QTimer(self)
-        #self.workingdorectory = None
-
-
+        
         self.scene_Vis_Res_Ani = QtWidgets.QGraphicsScene(self)
-
         self.scene_Vis_Wat_Ani = QtWidgets.QGraphicsScene(self)
-
-
 
     def vis_res_load_local_images(self):
             for file_name in os.listdir():
                 if file_name.endswith('_res.png'):
                     self.listWidget_vis_res_pic.addItem(file_name)
-
 
     def vis_wat_load_local_images(self):
             for file_name in os.listdir():
@@ -964,58 +957,57 @@ class MyMainWindow_Vis(QtWidgets.QMainWindow, Ui_MainWindow):
                     self.listWidget_vis_water_pic.addItem(file_name)
 
 
-
+    #The slot function for the 'Apply' button on the Vis-Res feature page
+    #1. Generate an animated graph (GIF file) of the selected resistivity images
+    #   and sort them by date (which is given in the file names of these images;
+    #2. Display the animated graph;
+    #3. Automatically save the animated graph and the file name is the timestamp of its creation.
     def apply_Vis_Res_Ani(self):
             self.refreshFileList
             selected_files = sorted([item.text() for item in self.listWidget_vis_res_pic.selectedItems()],
                                     key=lambda x: x.split('_')[0])
 
-            # 获取当前时间
+            # Get current date time
             now = datetime.now()
-            # 将当前时间转换为字符串格式
+            # Transfer current date time into string
             timestamp_str = now.strftime('%Y%m%d_%H%M%S')
-            # 使用这个时间戳来命名GIF文件
+            # Use this timestamp to name the generated gif files
+            # and so users could generate lots of gif files and no need to worry about file names
             filename = f'animation_{timestamp_str}.gif'
             with imageio.get_writer(filename, mode='I', duration=0.5) as writer:
                     for file in selected_files:
                             image = imageio.v2.imread(file)
                             writer.append_data(image)
 
-            # 3. 使用AnimatedGIFViewer显示GIF
+             # Display the gif
             self.viewer = AnimatedGIFViewer(filename, self)
             self.viewer.show()
+
+    #The slot function for the 'Apply' button on the Vis-Res feature page
+    #1. Generate an animated graph (GIF file) of the selected water content images
+    #   and sort them by date (which is given in the file names of these images;
+    #2. Display the animated graph;
+    #3. Automatically save the animated graph and the file name is the timestamp of its creation.
     def apply_Vis_Wat_Ani(self):
             self.refreshFileList
             selected_files = sorted([item.text() for item in self.listWidget_vis_water_pic.selectedItems()],
                                     key=lambda x: x.split('_')[0])
 
-            # 获取当前时间
+            # Get current date time
             now = datetime.now()
-            # 将当前时间转换为字符串格式
+            # Transfer current date time into string 
             timestamp_str = now.strftime('%Y%m%d_%H%M%S')
-            # 使用这个时间戳来命名GIF文件
+            # Use this timestamp to name the generated gif files
+            # and so users could generate lots of gif files and no need to worry about file names
             filename = f'animation_{timestamp_str}.gif'
             with imageio.get_writer(filename, mode='I', duration=0.5) as writer:
                     for file in selected_files:
                             image = imageio.v2.imread(file)
                             writer.append_data(image)
 
-            # 3. 使用AnimatedGIFViewer显示GIF
+            # Display the gif
             self.viewer = AnimatedGIFViewer(filename, self)
             self.viewer.show()
-
-    def refreshFileList(self):
-        # 清空fileSelection框
-        self.listWidget_vis_res_pic_.clear()
-        self.listWidget_vis_water_pic.clear()
-
-        # 获取文件夹中所有的*_res.png文件
-        for file_name in os.listdir():
-                if file_name.endswith('_res.png'):
-                        self.listWidget_vis_res_pic.addItem(file_name)
-                elif file_name.endswith('_wat.png'):
-                        self.listWidget_vis_water_pic.addItem(file_name)
-
 
 
 class AnimatedGIFViewer(QGraphicsView):
@@ -1024,15 +1016,16 @@ class AnimatedGIFViewer(QGraphicsView):
         self.scene = QGraphicsScene(self)
         self.setScene(self.scene)
 
-        # 读取GIF的每一帧
+        # Read each image for later creating an animated graph
         self.gif_reader = QImageReader(gif_path)
 
-        # 设置缩放因子
+        # Set the scaling factor for the animated graph to reduce the dimensions of it
         scale_factor = 0.50
         scaled_width = int(self.gif_reader.size().width() * scale_factor)
         scaled_height = int(self.gif_reader.size().height() * scale_factor)
 
-        # 读取GIF的每一帧并缩放
+        # Read and scale each image
+        # and generate an animated graph
         self.frames = [QPixmap.fromImage(self.gif_reader.read()).scaled(scaled_width, scaled_height) for _ in
                        range(self.gif_reader.imageCount())]
         self.current_frame = 0
@@ -1041,22 +1034,14 @@ class AnimatedGIFViewer(QGraphicsView):
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.next_frame)
-        self.timer.start(400)  # 您可以根据GIF的帧速率调整这个值
+      
+        # Adjust the values inside the parentheses to control 
+        # the GIF's frame rate, which is the interval between different images.
+        self.timer.start(400)  
 
     def next_frame(self):
             self.current_frame = (self.current_frame + 1) % len(self.frames)
             self.pixmap_item.setPixmap(self.frames[self.current_frame])
-
-
-
-
-
-class MyMainWindow(MyMainWindow_Vis):
-    def __init__(self):
-        super(MyMainWindow, self).__init__()
-        self.setupUi(self)
-
-
 
 
 if __name__ == '__main__':
