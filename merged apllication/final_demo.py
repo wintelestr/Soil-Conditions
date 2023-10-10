@@ -19,11 +19,20 @@ from pygimli.physics import ert
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import numpy as np
+from PyQt5.QtWidgets import  QGraphicsPixmapItem
+import os
+import matplotlib.pyplot as plt
+import numpy as np
+import pygimli as pg
+import pygimli.meshtools as mt
+from pygimli.physics import ert
+
+
+from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QGraphicsView, QGraphicsScene, QGraphicsPixmapItem
 from PyQt5.QtGui import QPixmap
-
 import sys
-import matplotlib.pyplot as plt
+
 import glob
 from matplotlib.colors import LinearSegmentedColormap
 from datetime import datetime
@@ -39,7 +48,7 @@ from PyQt5.QtCore import QPropertyAnimation, QRect
 
 tem_field=[(0,25)]
 tem=25
-
+save_directory = None
 class Ui_MainWindow(object, ):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -306,6 +315,11 @@ class Ui_MainWindow(object, ):
         self.pushButton_next_to_vis = QtWidgets.QPushButton(self.Water_content)
         self.pushButton_next_to_vis.setGeometry(QtCore.QRect(560, 450, 71, 32))
         self.pushButton_next_to_vis.setObjectName("pushButton_next_to_vis")
+        
+        self.pushButton_multiplefiles_processing = QtWidgets.QPushButton(self.Water_content)
+        self.pushButton_multiplefiles_processing.setGeometry(QtCore.QRect(560, 500, 160, 32))
+        self.pushButton_multiplefiles_processing.setObjectName("pushButton_multiplefiles_procssing")        
+        
         self.pushButton_import_soil_field = QtWidgets.QPushButton(self.Water_content)
         self.pushButton_import_soil_field.setGeometry(QtCore.QRect(460, 40, 201, 31))
         self.pushButton_import_soil_field.setObjectName("pushButton_import_soil_field")
@@ -406,6 +420,7 @@ class Ui_MainWindow(object, ):
         self.pushButton_next_to_domain.clicked.connect(self.jump_to_next_page)
         self.pushButton_Transfer_Data.clicked.connect(self.data_show)
         self.pushButton_next_to_visualization.clicked.connect(self.jump_to_next_visualization)
+    
 
         # domian and mesh part
         self.pushButton_domain_apply.clicked.connect(self.create_domain)
@@ -419,10 +434,11 @@ class Ui_MainWindow(object, ):
         self.pushButton_watercontent_calculate.clicked.connect(self.showImage)
         self.doubleSpinBox_Temperature.valueChanged.connect(self.update_variable)
         self.pushButton_import_soil_field.clicked.connect(self.openTableDialog)
-        
+        self.pushButton_multiplefiles_processing.clicked.connect(self.data_processing_multiple_files)         
         # visualisation part
-        self.vis_res_load_local_images()
-        self.vis_wat_load_local_images()
+        self.pushButton_next_to_vis.clicked.connect(self.vis_res_load_local_images)
+        self.pushButton_next_to_vis.clicked.connect(self.vis_wat_load_local_images)
+
 
         #Animation page of Vis-Res
         self.pushButton_vis_res_apply.clicked.connect(self.apply_Vis_Res_Ani)
@@ -473,11 +489,12 @@ class Ui_MainWindow(object, ):
     # realise the function which allows users to upload and save files from their computer
     def open_file_dialog(self):
         options = QFileDialog.Options()
-        files, _ = QFileDialog.getOpenFileNames(self, "QFileDialog.getOpenFileNames()", "",
-                                                "All Files (*);;Python Files (*.py)", options=options)
+        files, _ = QFileDialog.getOpenFileNames(self, "Select .tx0 files", "",
+                                                "TX0 Files (*.tx0);;All Files (*)", options=options)
+        global save_directory
         save_directory = QFileDialog.getExistingDirectory(self, "Select Directory")
+        
         print(f"Selected directory: {save_directory}")
-        self.save_directory = save_directory
         if not save_directory:
             return
         if files:
@@ -505,10 +522,12 @@ class Ui_MainWindow(object, ):
 
     # transfer raw data and show them in the text-browser
     def data_transfer(self):
+        global save_directory
         # input and output folder
-        input_folder = self.save_directory
-        output_folder = self.save_directory
+        input_folder = save_directory
+        output_folder = save_directory
         # loop for file chang
+        os.chdir(save_directory)
         for filename in os.listdir(input_folder):
             if filename.endswith('.tx0'):
 
@@ -547,15 +566,19 @@ class Ui_MainWindow(object, ):
                     output_file.write("# a b m n rhoa\n")
                     for row in selected_data:
                         output_file.write("\t".join(row) + "\n")
-            
-                return output_file_name
+                  
+  
 
     def data_show(self):
-        output_file = self.data_transfer()
-        os.chdir(self.save_directory)
-        with open(output_file, 'r') as file:
-            content = file.read()
-        self.textBrowser_showdata.setPlainText(content)
+        global save_directory
+        self.data_transfer()
+        os.chdir(save_directory)
+        for file in os.listdir(save_directory):
+            if file.endswith('.txt'):
+                with open(file, 'r') as fils:
+                    content = fils.read()
+                    self.textBrowser_showdata.setPlainText(content)
+                break
 
     def jump_to_next_page(self):
         index_of_page = 1
@@ -619,6 +642,7 @@ class Ui_MainWindow(object, ):
     #inversion part
     #single file process
     def startInversion(self):
+        global save_directory
         # Read the values from the spin boxes
         maxIter = self.spinBox_Iterations.value()
         lam = self.spinBox_Lambda.value()
@@ -629,11 +653,11 @@ class Ui_MainWindow(object, ):
         inv = mgr.invert(mesh=mesh, lam=lam, maxIter=6, dPhi=2, CHI1OPT=5, Verbose=True)
         mgr and mesh will inherit from previous sections: data processing and Domain selection/ meshing
         '''
-        print(f"Using directory: {self.save_directory}")
+        print(f"Using directory: {save_directory}")
     
         file_to_convert = None  # Initialize to None
-        os.chdir(self.save_directory)
-        for file in os.listdir(self.save_directory):
+        os.chdir(save_directory)
+        for file in os.listdir(save_directory):
            if file.endswith('.txt'):
                file_to_convert = file
                break
@@ -684,7 +708,7 @@ class Ui_MainWindow(object, ):
         ax1.set_title(labels)
         plt.tight_layout()
         # automatic save
-        plt.savefig("result_resistivity.jpg")
+        plt.savefig("result_res.jpg")
 
         #plt.show()
         # Embed the generated figure in QWidget
@@ -719,7 +743,7 @@ class Ui_MainWindow(object, ):
             except Exception as e:
                     print("An error occurred:", e)
             #The above functions will draw the results and save them as a specified name in JPG format, displaying the result image on the canvas
-            image_path = "result_water_content.jpg"
+            image_path = "result_wat.jpg"
             pixmap = QPixmap(image_path)
             # Retrieve the Canvas Dimensions
             canvas_width = 765
@@ -792,7 +816,7 @@ class Ui_MainWindow(object, ):
             ax1.set_xlim(-0, self.mgr.paraDomain.xmax())
             ax1.set_ylim(-8, self.mgr.paraDomain.ymax())
             ax1.set_title(labels)
-            plt.savefig('result_water_content.jpg')
+            plt.savefig('result_wat.jpg')
             plt.close()
             print("end")
 
@@ -815,16 +839,165 @@ class Ui_MainWindow(object, ):
             dialog.exec_()  
             print("2222222")   
             
-    
+    def data_processing_multiple_files(self):
+        global save_directory
+        os.chdir(save_directory)
+        for file in os.listdir(save_directory):
+            if file.endswith('.txt'):
+                
+                
+                file_to_convert = file
+                start_x = self.spinBox_startX.value()
+                start_y = self.spinBox_startY.value()
+                end_x = self.spinBox_endX.value()
+                end_y = self.spinBox_endY.value()
+
+                self.geom = pg.meshtools.createWorld(start=[start_x, end_y], end=[end_x, start_y], worldMarker=False)
+                ax = self.canvas_domain.figure.add_subplot(111)
+                ax.clear()
+
+                ax.yaxis.set_major_locator(plt.MultipleLocator(2.0))
+
+                pg.show(self.geom, ax=ax, boundary=True)
+                self.canvas_domain.draw()
+                pg.show(self.geom, boundary=True)
+                quality = self.doubleSpinBox_quality.value()
+                area = self.doubleSpinBox_area.value()
+
+                self.mesh = mt.createMesh(self.geom, quality, area, smooth=True)
+                ab = self.canvas_mesh.figure.add_subplot(111)
+                ab.clear()
+
+                ab.yaxis.set_major_locator(plt.MultipleLocator(2.0))
+
+                pg.show(self.mesh, ax=ab, boundary=True)
+                self.canvas_mesh.draw()
+
+                maxIter = self.spinBox_Iterations.value()
+                lam = self.spinBox_Lambda.value()
+                dPhi = self.spinBox_dPhi.value()
+                geom = self.geom
+                mesh = self.mesh
+
+
+                # Inversion preparing 
+                date = os.path.basename(file_to_convert)  # Extract the file name from the path
+                self.date = date
+                mgr = ert.ERTManager(file_to_convert, verbose=True, debug=True)
+                self.mgr = mgr
+                rhoa = np.array(mgr.data['rhoa'])
+                Argw = np.argwhere(rhoa <= 0)
+                pg.info('Filtered rhoa (min/max)', min(mgr.data['rhoa']), max(mgr.data['rhoa']))
+                Accur = (1 - np.shape(Argw)[0] / np.shape(rhoa)[0]) * 100
+
+                # Data processing Filter negative value
+                mgr.data.remove(mgr.data["rhoa"] < 0)
+
+                # Add estimated Error and geometrical factor
+                mgr.data['err'] = ert.estimateError(mgr.data, absoluteError=0.001, relativeError=0.03)
+                pg.info('Filtered rhoa (min/max)', min(mgr.data['rhoa']), max(mgr.data['rhoa']))
+                mgr.data['k'] = ert.createGeometricFactors(mgr.data, numerical=True)
+                #ert.show(mgr.data)
+
+                # Inversion here
+                inv = mgr.invert(mesh=mesh, lam=lam, maxIter=maxIter, dPhi=dPhi, CHI1OPT=5, Verbose=True)
+
+                # Storing and saving data for later manipulation
+                Storage = np.zeros([np.shape(mesh.cellMarkers())[0], 1])
+                Storage[:, 0] = inv
+                self.Storage = Storage
+                mgr.saveResult(date[:-4])
+
+                # Plotting
+                fig1, (ax1) = plt.subplots(1, sharex=True, figsize=(16.0, 5))
+                mgr.showResult(ax=ax1, cMin=50, cMax=15000)
+                labels = date
+                ax1.set_xlim(0, mgr.paraDomain.xmax())
+                ax1.set_ylim(-8, mgr.paraDomain.ymax())
+                ax1.set_title(labels)
+                plt.tight_layout()
+                # automatic save
+                base_name = os.path.splitext(file_to_convert)[0]
+                new_name_res = base_name +'_res.jpg'
+                plt.savefig(new_name_res)
+
+
+
+                print("mesh", mesh)
+                centers = mesh.cellCenters()
+                x_coordinates = centers[:, 0]
+                y_coordinates = centers[:, 1]
+                np.shape(centers)
+                print("x_coordinates", x_coordinates)
+                print("y_coordinates", y_coordinates)
+
+                Storage = self.Storage
+                fSWC = lambda x: 246.47 * x ** (-0.627)
+                fSWC_2 = lambda x: 211 * x ** (-0.59)
+
+
+                global tem_field
+                print("t111111111111111",tem_field)
+                temperature_points = tem_field
+                T = 25.5
+                temperature_points.sort(key=lambda x: x[0])
+                for j in range(len(y_coordinates) - 1):
+                        y = y_coordinates[j]
+                        # Find the temperature segment the current belongs to
+                        for i in range(len(temperature_points) - 1):
+                                y1, T1 = temperature_points[i]
+                                y2, T2 = temperature_points[i + 1]
+                                if y1 <= y <= y2:
+                                        # Linearly interpolate the temperature value
+                                        T = T1 + (T2 - T1) * ((y - y1) / (y2 - y1))
+                                        break
+                                else:
+                                        # If y is out of bounds of the temperature points, use the nearest boundary value
+                                        T = T1 if y < y1 else T2
+                        Storage[j, :] = (1 + 0.025 * (T - 25)) * Storage[j, :]
+
+
+                SWC = fSWC(Storage)
+
+                print("11111111111")
+                print(Storage)
+
+                fig1, (ax1) = plt.subplots(1, sharex=(True), figsize=(15.5, 7), gridspec_kw={'height_ratios': [2]})
+                # plt.close()
+                pg.viewer.show(mesh=mesh, data=SWC[:, 0], hold=True, label='Soil water content', ax=ax1, cMin=0,
+                               cMax=30,
+                               cMap='Spectral', showMesh=True)
+                print("12321321131321")
+
+                labels = self.date
+                ax1.set_xlim(-0, self.mgr.paraDomain.xmax())
+                ax1.set_ylim(-8, self.mgr.paraDomain.ymax())
+                ax1.set_title(labels)
+                new_name_wat = base_name +'_wat.jpg'
+                plt.savefig(new_name_wat)
+                plt.close()
+                print("end")
+            
+        
+        
+        print('s')
     
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.pushButton_Import.setText(_translate("MainWindow", "Import"))
+        self.pushButton_Import.setToolTip(_translate("MainWindow",
+                                               "<html><head/><body><p>load your data file and jump to data pre_processing page</p></body></html>"))
         self.pushButton_importfile.setText(_translate("MainWindow", "Choose your file"))
+        self.pushButton_importfile.setToolTip(_translate("MainWindow",
+                                               "<html><head/><body><p>Choose your file or files to upload, only .tx0 files will be reveiced</p></body></html>"))
         self.tabWidget_Data.setTabText(self.tabWidget_Data.indexOf(self.Data), _translate("MainWindow", "Data"))
         self.pushButton_Transfer_Data.setText(_translate("MainWindow", "Transfer Data"))
-        self.pushButton_next_to_visualization.setText(_translate("MainWindow", "Next-multiple file"))
+        self.pushButton_Transfer_Data.setToolTip(_translate("MainWindow",
+                                               "<html><head/><body><p>Transfer your .tx0 raw data files to .txt files</p></body></html>"))
+        self.pushButton_next_to_visualization.setText(_translate("MainWindow", "tips for multiple files"))
+        self.pushButton_next_to_visualization.setToolTip(_translate("MainWindow",
+                                               "<html><head/><body><p>If you plan to process multiple files, you need next button to each tab to set the parameter. And click next button until to water content page, and click button Multiplefiles_processing </p></body></html>"))
         self.pushButton_next_to_domain.setText(_translate("MainWindow", "Next-single file"))
         self.tabWidget_Data.setTabText(self.tabWidget_Data.indexOf(self.Pre_processing),
                                        _translate("MainWindow", "Pre_processing"))
@@ -850,7 +1023,7 @@ class Ui_MainWindow(object, ):
         self.label_area.setToolTip(_translate("MainWindow",
                                                  "<html><head/><body><p>Control the area of individual mesh elements</p></body></html>"))
         
-        self.pushButton_mesh_save.setText(_translate("MainWindow", "Save"))
+        self.pushButton_mesh_save.setText(_translate("MainWindow", "Apply"))
         self.pushButton_next_to_inversion.setText(_translate("MainWindow", "Next"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.Mesh), _translate("MainWindow", "Mesh"))
         self.tabWidget_Importing.setTabText(self.tabWidget_Importing.indexOf(self.Domain_Mesh),
@@ -860,27 +1033,67 @@ class Ui_MainWindow(object, ):
         self.label_Lambda.setText(_translate("MainWindow", "Lambda"))
         self.label_dPhi.setText(_translate("MainWindow", "dPhi"))
         self.pushButton_next_to_watercontent.setText(_translate("MainWindow", "Next"))
+        
+        
         self.label_iterations.setText(_translate("MainWindow", "Iterations"))
         self.tabWidget_Importing.setTabText(self.tabWidget_Importing.indexOf(self.Inversion),
                                             _translate("MainWindow", "Inversion"))
         self.pushButton_watercontent_calculate.setText(_translate("MainWindow", "Calculate"))
+        self.pushButton_watercontent_calculate.setToolTip(_translate("MainWindow",
+                                               "<html><head/><body><p>After configuring the temperature field, click to start water content calculation based on resistivity.</p></body></html>"))
+        
         self.label_Temperature.setText(_translate("MainWindow", "Temperature"))
+        self.label_Temperature.setToolTip(_translate("MainWindow",
+                                                 "<html><head/><body><p>Set constant soil temperature, default is 25°C</p></body></html>"))
         self.pushButton_next_to_vis.setText(_translate("MainWindow", "Next"))
+        self.pushButton_multiplefiles_processing.setText(_translate("MainWindow", "Multiplefiles_processing"))
+        self.pushButton_multiplefiles_processing.setToolTip(_translate("MainWindow",
+                                                 "<html><head/><body><p>When you finish parameter setting, click this botton to start multiple files processing</p></body></html>"))
+        
         self.pushButton_import_soil_field.setText(_translate("MainWindow", "Import Soil Temperatue Field"))
+        self.pushButton_import_soil_field.setToolTip(_translate("MainWindow",
+                                               "<html><head/><body><p> Click to open an editable table, enter temperature data from real sensors. First column is sensor depth, second column is temperature at that depth. </p></body></html>"))
+        
         self.tabWidget_Importing.setTabText(self.tabWidget_Importing.indexOf(self.Water_content),
                                             _translate("MainWindow", "Water Content"))
+
+        
         self.radioButton_vis_res_ani.setText(_translate("MainWindow", "Time Lapse Animation"))
+        self.radioButton_vis_res_ani.setToolTip(_translate("MainWindow",
+                                               "<html><head/><body><p>Visualization Processing for Resistivity Image Files</p></body></html>"))
+        
         self.label_resistivity_file.setText(_translate("MainWindow", "File Selection"))
+        self.label_resistivity_file.setToolTip(_translate("MainWindow",
+                                               "<html><head/><body><p>After selecting one or more files, click Apply</p></body></html>"))
+        
         self.pushButton_vis_res_apply.setText(_translate("MainWindow", "Apply"))
+        self.pushButton_vis_res_apply.setToolTip(_translate("MainWindow",
+                                               "<html><head/><body><p>Generating a GIF file and automatically saved to the current local folder</p></body></html>"))
+        
         self.tabWidget_3.setTabText(self.tabWidget_3.indexOf(self.Vis_resistivity),
                                     _translate("MainWindow", "Resistivity"))
+
+        
         self.radioButton_vis_water_ani.setText(_translate("MainWindow", "Time Lapse Animation"))
+        self.radioButton_vis_water_ani.setToolTip(_translate("MainWindow",
+                                               "<html><head/><body><p>Visualization Processing for Resistivity Image Files</p></body></html>"))
+        
         self.label_water_file.setText(_translate("MainWindow", "File Selection"))
+        self.label_water_file.setToolTip(_translate("MainWindow",
+                                               "<html><head/><body><p>After selecting one or more files, click Apply</p></body></html>"))
+        
         self.pushButton_vis_water_apply.setText(_translate("MainWindow", "Apply"))
+        self.pushButton_vis_water_apply.setToolTip(_translate("MainWindow",
+                                               "<html><head/><body><p>Generating a GIF file and automatically saved to the current local folder</p></body></html>"))
+        
         self.tabWidget_3.setTabText(self.tabWidget_3.indexOf(self.Vis_water_content),
                                     _translate("MainWindow", "Water content"))
+
+        
         self.tabWidget_Importing.setTabText(self.tabWidget_Importing.indexOf(self.Visualization),
                                             _translate("MainWindow", "Visualization"))
+
+        
         self.menuHelp.setTitle(_translate("MainWindow", "Help"))
         self.actionNew.setText(_translate("MainWindow", "New"))
         self.actionOpen.setText(_translate("MainWindow", "Open"))
@@ -941,73 +1154,85 @@ class MyMainWindow_Vis(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MyMainWindow_Vis, self).__init__(parent)
         self.setupUi(self)
+
         self.timer = QTimer(self)
-        
+        #self.workingdorectory = None
+
+
         self.scene_Vis_Res_Ani = QtWidgets.QGraphicsScene(self)
+
         self.scene_Vis_Wat_Ani = QtWidgets.QGraphicsScene(self)
 
+
+
     def vis_res_load_local_images(self):
-            for file_name in os.listdir():
-                if file_name.endswith('_res.png'):
-                    self.listWidget_vis_res_pic.addItem(file_name)
+        global save_directory
+        os.chdir(save_directory)
+        for file_name in os.listdir(save_directory):
+            if file_name.endswith('_res.jpg'):
+                self.listWidget_vis_res_pic.addItem(file_name)
+
 
     def vis_wat_load_local_images(self):
-            for file_name in os.listdir():
-                if file_name.endswith('_wat.png'):
-                    self.listWidget_vis_water_pic.addItem(file_name)
+        global save_directory
+        for file_name in os.listdir(save_directory):
+            if file_name.endswith('_wat.jpg'):
+                self.listWidget_vis_water_pic.addItem(file_name)
 
 
-    #The slot function for the 'Apply' button on the Vis-Res feature page
-    #1. Generate an animated graph (GIF file) of the selected resistivity images
-    #   and sort them by date (which is given in the file names of these images;
-    #2. Display the animated graph;
-    #3. Automatically save the animated graph and the file name is the timestamp of its creation.
+
     def apply_Vis_Res_Ani(self):
             self.refreshFileList
             selected_files = sorted([item.text() for item in self.listWidget_vis_res_pic.selectedItems()],
                                     key=lambda x: x.split('_')[0])
 
-            # Get current date time
+            # 获取当前时间
             now = datetime.now()
-            # Transfer current date time into string
+            # 将当前时间转换为字符串格式
             timestamp_str = now.strftime('%Y%m%d_%H%M%S')
-            # Use this timestamp to name the generated gif files
-            # and so users could generate lots of gif files and no need to worry about file names
+            # 使用这个时间戳来命名GIF文件
             filename = f'animation_{timestamp_str}.gif'
             with imageio.get_writer(filename, mode='I', duration=0.5) as writer:
                     for file in selected_files:
                             image = imageio.v2.imread(file)
                             writer.append_data(image)
 
-             # Display the gif
+            # 3. 使用AnimatedGIFViewer显示GIF
             self.viewer = AnimatedGIFViewer(filename, self)
             self.viewer.show()
-
-    #The slot function for the 'Apply' button on the Vis-Res feature page
-    #1. Generate an animated graph (GIF file) of the selected water content images
-    #   and sort them by date (which is given in the file names of these images;
-    #2. Display the animated graph;
-    #3. Automatically save the animated graph and the file name is the timestamp of its creation.
     def apply_Vis_Wat_Ani(self):
             self.refreshFileList
             selected_files = sorted([item.text() for item in self.listWidget_vis_water_pic.selectedItems()],
                                     key=lambda x: x.split('_')[0])
 
-            # Get current date time
+            # 获取当前时间
             now = datetime.now()
-            # Transfer current date time into string 
+            # 将当前时间转换为字符串格式
             timestamp_str = now.strftime('%Y%m%d_%H%M%S')
-            # Use this timestamp to name the generated gif files
-            # and so users could generate lots of gif files and no need to worry about file names
+            # 使用这个时间戳来命名GIF文件
             filename = f'animation_{timestamp_str}.gif'
             with imageio.get_writer(filename, mode='I', duration=0.5) as writer:
                     for file in selected_files:
                             image = imageio.v2.imread(file)
                             writer.append_data(image)
 
-            # Display the gif
+            # 3. 使用AnimatedGIFViewer显示GIF
             self.viewer = AnimatedGIFViewer(filename, self)
             self.viewer.show()
+
+    def refreshFileList(self):
+        global save_directory
+        # 清空fileSelection框
+        self.listWidget_vis_res_pic_.clear()
+        self.listWidget_vis_water_pic.clear()
+
+        # 获取文件夹中所有的*_res.png文件
+        for file_name in os.listdir(save_directory):
+                if file_name.endswith('_res.jpg'):
+                        self.listWidget_vis_res_pic.addItem(file_name)
+                elif file_name.endswith('_wat.jpg'):
+                        self.listWidget_vis_water_pic.addItem(file_name)
+
 
 
 class AnimatedGIFViewer(QGraphicsView):
@@ -1016,16 +1241,15 @@ class AnimatedGIFViewer(QGraphicsView):
         self.scene = QGraphicsScene(self)
         self.setScene(self.scene)
 
-        # Read each image for later creating an animated graph
+        # 读取GIF的每一帧
         self.gif_reader = QImageReader(gif_path)
 
-        # Set the scaling factor for the animated graph to reduce the dimensions of it
+        # 设置缩放因子
         scale_factor = 0.50
         scaled_width = int(self.gif_reader.size().width() * scale_factor)
         scaled_height = int(self.gif_reader.size().height() * scale_factor)
 
-        # Read and scale each image
-        # and generate an animated graph
+        # 读取GIF的每一帧并缩放
         self.frames = [QPixmap.fromImage(self.gif_reader.read()).scaled(scaled_width, scaled_height) for _ in
                        range(self.gif_reader.imageCount())]
         self.current_frame = 0
@@ -1034,14 +1258,22 @@ class AnimatedGIFViewer(QGraphicsView):
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.next_frame)
-      
-        # Adjust the values inside the parentheses to control 
-        # the GIF's frame rate, which is the interval between different images.
-        self.timer.start(400)  
+        self.timer.start(400)  # 您可以根据GIF的帧速率调整这个值
 
     def next_frame(self):
             self.current_frame = (self.current_frame + 1) % len(self.frames)
             self.pixmap_item.setPixmap(self.frames[self.current_frame])
+
+
+
+
+
+class MyMainWindow(MyMainWindow_Vis):
+    def __init__(self):
+        super(MyMainWindow, self).__init__()
+        self.setupUi(self)
+
+
 
 
 if __name__ == '__main__':
