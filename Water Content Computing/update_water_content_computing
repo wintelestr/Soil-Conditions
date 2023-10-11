@@ -1,0 +1,55 @@
+    def watercomputing(self):
+
+        geom = self.geom
+        mesh = self.mesh
+        print("mesh", mesh)
+        centers = mesh.cellCenters()
+        x_coordinates = centers[:, 0]
+        y_coordinates = centers[:, 1]
+        np.shape(centers)
+        print("x_coordinates", x_coordinates)
+        print("y_coordinates", y_coordinates)
+
+        Storage = self.Storage
+        fSWC = lambda x: 246.47 * x ** (-0.627)
+        fSWC_2 = lambda x: 211 * x ** (-0.59)
+
+        global tem_field
+        print("t111111111111111", tem_field)
+        temperature_points = tem_field
+        T = 25.5
+        temperature_points.sort(key=lambda x: x[0])
+        for j in range(len(y_coordinates) - 1):
+            y = y_coordinates[j]
+            # Find the temperature segment the current belongs to
+            for i in range(len(temperature_points) - 1):
+                y1, T1 = temperature_points[i]
+                y2, T2 = temperature_points[i + 1]
+                if y1 <= y <= y2:
+                    # Linearly interpolate the temperature value
+                    T = T1 + (T2 - T1) * ((y - y1) / (y2 - y1))
+                    break
+                else:
+                    # If y is out of bounds of the temperature points, use the nearest boundary value
+                    T = T1 if y < y1 else T2
+            Storage[j, :] = (1 + 0.025 * (T - 25)) * Storage[j, :]
+
+        SWC = fSWC(Storage)
+
+        print("11111111111")
+        print(Storage)
+
+        fig1, (ax1) = plt.subplots(1, sharex=(True), figsize=(15.5, 7), gridspec_kw={'height_ratios': [2]})
+        # plt.close()
+        pg.viewer.show(mesh=mesh, data=SWC[:, 0], hold=True, label='Soil water content', ax=ax1, cMin=0,
+                       cMax=30,
+                       cMap='Spectral', showMesh=True)
+        print("12321321131321")
+
+        labels = self.date
+        ax1.set_xlim(-0, self.mgr.paraDomain.xmax())
+        ax1.set_ylim(-8, self.mgr.paraDomain.ymax())
+        ax1.set_title(labels)
+        plt.savefig('result_wat.jpg')
+        plt.close()
+        print("end")
