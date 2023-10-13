@@ -359,7 +359,16 @@ class Ui_MainWindow(object):
         #ert.show(mgr.data)
 
         # Inversion here
-        inv = mgr.invert(mesh=mesh, lam=lam, maxIter=6, dPhi=2, CHI1OPT=5, Verbose=True)
+        tolerance = 1 # Abort criterion for chi2 (chi-squared) for an inversion process. 
+        # Chi-squared represents the goodness of fit between the model and the observed data.
+        for iteration in range(maxIter):
+                inv = mgr.invert(mesh=mesh, lam=lam, maxIter=1, dPhi=dPhi, CHI1OPT=5, Verbose=True)
+                chi2 = inv.chi2()  # Get the chi2 value for the current iteration
+                
+                # Check if chi2 is below the tolerance level
+                if chi2 < tolerance:
+                        pg.info(f"Inversion converged at iteration {iteration}. Chi2: {chi2}")
+                        break
 
         # Storing and saving data for later manipulation
         Storage = np.zeros([np.shape(mesh.cellMarkers())[0], 1])
