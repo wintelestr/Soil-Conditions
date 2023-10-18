@@ -1004,6 +1004,8 @@ class Ui_MainWindow(object, ):
         self.tabWidget_Importing.setTabText(self.tabWidget_Importing.indexOf(self.Importing),
                                             _translate("MainWindow", "Importing"))
         self.pushButton_domain_apply.setText(_translate("MainWindow", "Apply"))
+        self.pushButton_domain_apply.setToolTip(_translate("MainWindow",
+                                                 "<html><head/><body><p>Press the button to generate a domain</p></body></html>"))
         self.pushButton_next_to_mesh.setText(_translate("MainWindow", "Next"))
         self.pushButton_domain_save.setText(_translate("MainWindow", "Save"))
         self.pushButton_domain_save.setToolTip(_translate("MainWindow",
