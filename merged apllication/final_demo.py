@@ -1007,6 +1007,8 @@ class Ui_MainWindow(object, ):
         self.pushButton_domain_apply.setToolTip(_translate("MainWindow",
                                                  "<html><head/><body><p>Press the button to generate a domain</p></body></html>"))
         self.pushButton_next_to_mesh.setText(_translate("MainWindow", "Next"))
+        self.pushButton_next_to_mesh.setToolTip(_translate("MainWindow",
+                                                 "<html><head/><body><p>Press the button to the next step</p></body></html>"))
         self.pushButton_domain_save.setText(_translate("MainWindow", "Save"))
         self.pushButton_domain_save.setToolTip(_translate("MainWindow",
                                                "<html><head/><body><p>Save the figure to your local directory</p></body></html>"))
@@ -1020,13 +1022,16 @@ class Ui_MainWindow(object, ):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.Domain), _translate("MainWindow", "Domain"))
         self.label_quality.setText(_translate("MainWindow", "Quality"))
         self.label_quality.setToolTip(_translate("MainWindow",
-                                               "<html><head/><body><p>Determine the grid quality, including element shape, size, and smoothness</p></body></html>"))
+                                               "<html><head/><body><p>2D triangle quality sets a minimum angle constraint. Be careful with values above 34 degrees. </p></body></html>"))
         self.label_area.setText(_translate("MainWindow", "Area"))
         self.label_area.setToolTip(_translate("MainWindow",
-                                                 "<html><head/><body><p>Control the area of individual mesh elements</p></body></html>"))
-        
+                                                 "<html><head/><body><p>Maximum element size. 2D maximum triangle size in m*²</p></body></html>"))
         self.pushButton_mesh_save.setText(_translate("MainWindow", "Apply"))
+        self.pushButton_mesh_save.setToolTip(_translate("MainWindow",
+                                                 "<html><head/><body><p>Save the figure to your local directory</p></body></html>"))
         self.pushButton_next_to_inversion.setText(_translate("MainWindow", "Next"))
+        self.pushButton_next_to_inversion.setToolTip(_translate("MainWindow",
+                                                 "<html><head/><body><p>Press the button to the next step</p></body></html>"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.Mesh), _translate("MainWindow", "Mesh"))
         self.tabWidget_Importing.setTabText(self.tabWidget_Importing.indexOf(self.Domain_Mesh),
                                             _translate("MainWindow", "Domain and Mesh"))
