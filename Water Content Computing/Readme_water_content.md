@@ -12,7 +12,7 @@ Users have the option to either set a constant temperature or import a temperatu
 
 **Temperature Field Import Button:** Import Soil Temperature Field
 
-**Description:** In the Water Content window, users can specify the constant temperature (default is 25 degrees) using the spinbox or import a two-dimensional distribution file of soil temperature to configure the water content calculation process.
+**Description:** In the Water Content window, users can specify the constant temperature (default is 25 degrees) using the spinbox or import a two-dimensional distribution file of soil temperature to configure the water content calculation process. When a user wishes to import temperature field data and clicks the 'Import Temperature Field' button, a dialog box will appear. This dialog box allows the user to input depth and temperature data. The first column is for depth, and the second column is for temperature. Users can enter temperature readings from temperature sensors. In cases where temperature data is missing, the software employs linear interpolation to fill in the gaps and complete the temperature dataset.
 
 **Range:**
 If you do not consider the distribution of soil temperature in your analysis, you can specify a constant temperature (default is 25 degrees), assuming uniform soil temperature.If you want to consider the distribution of soil temperature, you should import a temperature field file to perform the conversion from resistivity to water content.
