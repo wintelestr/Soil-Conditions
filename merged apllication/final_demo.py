@@ -1,4 +1,11 @@
 # -*- coding: utf-8 -*-
+# Author: Chuanrui Yang, Jinsen Lou, Qian Zhang, Weiqiao Xu, Yolanda Yang
+# Date: 16/10/2023
+# Description: The program is designed to create a graphical user interface using PyQt 
+# for soil condition inversion calculations. It utilizes Pygimli and PyBERT libraries to 
+# process data from electrode-detected tx0 files. The data is transformed into soil resistivity distribution, 
+# followed by conversion into soil water content distribution. 
+# Additionally, the program allows for the generation of GIF animations using data collected over multiple days.
 
 # Form implementation generated from reading ui file '2D_soil_merged.ui'
 #
@@ -96,7 +103,7 @@ class Ui_MainWindow(object, ):
         self.Data.setObjectName("Data")
         self.listWidget_file_list = QtWidgets.QListWidget(self.Data)
         self.listWidget_file_list.setGeometry(QtCore.QRect(130, 20, 461, 451))
-        self.listWidget_file_list.setStyleSheet("background: rgb(255, 255, 255) color: black")
+        self.listWidget_file_list.setStyleSheet("background: rgb(255, 255, 255); color: black")
         self.listWidget_file_list.setObjectName("listWidget_file_list")
         self.pushButton_Import = QtWidgets.QPushButton(self.Data)
         self.pushButton_Import.setGeometry(QtCore.QRect(630, 440, 82, 32))
@@ -234,9 +241,13 @@ class Ui_MainWindow(object, ):
         self.pushButton_inversion_apply = QtWidgets.QPushButton(self.Inversion)
         self.pushButton_inversion_apply.setGeometry(QtCore.QRect(470, 30, 111, 51))
         self.pushButton_inversion_apply.setObjectName("pushButton_inversion_apply")
+        #Add tooltip/explanation for Apply button
+        self.pushButton_inversion_apply.setToolTip("Start inverting the imported data to generate the soil resistivity distribution map <br> after choosing the value for each parameter of inversion algorithm.")
         self.pushButton_inversion_save = QtWidgets.QPushButton(self.Inversion)
         self.pushButton_inversion_save.setGeometry(QtCore.QRect(150, 450, 71, 31))
         self.pushButton_inversion_save.setObjectName("pushButton_inversion_save")
+         #Add tooltip/explanation for Save button
+        self.pushButton_inversion_save.setToolTip("Save the inverted soil resistivity distribution map.<br>")
         self.label_Lambda = QtWidgets.QLabel(self.Inversion)
         self.label_Lambda.setGeometry(QtCore.QRect(250, 50, 61, 16))
         self.label_Lambda.setStyleSheet("background-color: rgb(255, 255, 255);\n"
@@ -248,7 +259,7 @@ class Ui_MainWindow(object, ):
                                       "color: rgb(0, 0, 0);\n"
                                       "text-align: center;")
         self.label_dPhi.setObjectName("label_dPhi")
-
+        self.label_dPhi.setToolTip("Delta Phi determines the allowable change in resistivity between neighboring cells in the model.<br>")
         self.inversion_result_widget = QtWidgets.QWidget(self.Inversion)
         self.inversion_result_widget.setGeometry(QtCore.QRect(140, 120, 511, 311))
         self.inversion_result_widget.setStyleSheet("background-color: rgb(255, 255, 255);")
@@ -264,6 +275,7 @@ class Ui_MainWindow(object, ):
         self.spinBox_Iterations.setGeometry(QtCore.QRect(330, 20, 40, 20))
         self.spinBox_Iterations.setProperty("value", 5)
         self.spinBox_Iterations.setObjectName("spinBox_Iterations")
+
         self.spinBox_Iterations.setMinimum(5)
         self.spinBox_Iterations.setMaximum(30)
         
@@ -612,7 +624,7 @@ class Ui_MainWindow(object, ):
 
         pg.show(self.geom, ax=ax, boundary=True)
         self.canvas_domain.draw()
-
+        
     def create_mesh(self):
         # Create a matrix using the values of quality and area
         pg.show(self.geom, boundary=True)
@@ -622,11 +634,11 @@ class Ui_MainWindow(object, ):
         self.mesh = mt.createMesh(self.geom, quality, area, smooth=True)
         ab = self.canvas_mesh.figure.add_subplot(111)
         ab.clear()
-
         ab.yaxis.set_major_locator(plt.MultipleLocator(2.0))
 
         pg.show(self.mesh, ax=ab, boundary=True)
         self.canvas_mesh.draw()
+
 
     # Function to save generated figures
     def save(self):
@@ -1022,13 +1034,13 @@ class Ui_MainWindow(object, ):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.Domain), _translate("MainWindow", "Domain"))
         self.label_quality.setText(_translate("MainWindow", "Quality"))
         self.label_quality.setToolTip(_translate("MainWindow",
-                                               "<html><head/><body><p>2D triangle quality sets a minimum angle constraint. Be careful with values above 34 degrees. </p></body></html>"))
+
+                                               "<html><head/><body><p>Determine the grid quality, including element shape, size, and smoothness</p></body></html>"))
         self.label_area.setText(_translate("MainWindow", "Area"))
         self.label_area.setToolTip(_translate("MainWindow",
-                                                 "<html><head/><body><p>Maximum element size. 2D maximum triangle size in m*²</p></body></html>"))
+                                                 "<html><head/><body><p>Control the area of individual mesh elements</p></body></html>"))
+        
         self.pushButton_mesh_save.setText(_translate("MainWindow", "Apply"))
-        self.pushButton_mesh_save.setToolTip(_translate("MainWindow",
-                                                 "<html><head/><body><p>Save the figure to your local directory</p></body></html>"))
         self.pushButton_next_to_inversion.setText(_translate("MainWindow", "Next"))
         self.pushButton_next_to_inversion.setToolTip(_translate("MainWindow",
                                                  "<html><head/><body><p>Press the button to the next step</p></body></html>"))
@@ -1038,11 +1050,13 @@ class Ui_MainWindow(object, ):
         self.pushButton_inversion_apply.setText(_translate("MainWindow", "Apply"))
         self.pushButton_inversion_save.setText(_translate("MainWindow", "Save"))
         self.label_Lambda.setText(_translate("MainWindow", "Lambda"))
-        self.label_dPhi.setText(_translate("MainWindow", "dPhi"))
+        self.label_Lambda.setToolTip("Lambda controls the smoothness of the inverted model.<br> It helps prevent overfitting by penalizing complex models.")
+        self.label_dPhi.setText(_translate("MainWindow", "Delta Phi"))
         self.pushButton_next_to_watercontent.setText(_translate("MainWindow", "Next"))
         
         
         self.label_iterations.setText(_translate("MainWindow", "Iterations"))
+        self.label_iterations.setToolTip("Maximum number of iterations for the inversion algorithm.<br>")
         self.tabWidget_Importing.setTabText(self.tabWidget_Importing.indexOf(self.Inversion),
                                             _translate("MainWindow", "Inversion"))
         self.pushButton_watercontent_calculate.setText(_translate("MainWindow", "Calculate"))
