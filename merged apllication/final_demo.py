@@ -624,7 +624,7 @@ class Ui_MainWindow(object, ):
 
         pg.show(self.geom, ax=ax, boundary=True)
         self.canvas_domain.draw()
-
+        
     def create_mesh(self):
         # Create a matrix using the values of quality and area
         pg.show(self.geom, boundary=True)
@@ -634,11 +634,11 @@ class Ui_MainWindow(object, ):
         self.mesh = mt.createMesh(self.geom, quality, area, smooth=True)
         ab = self.canvas_mesh.figure.add_subplot(111)
         ab.clear()
-
         ab.yaxis.set_major_locator(plt.MultipleLocator(2.0))
 
         pg.show(self.mesh, ax=ab, boundary=True)
         self.canvas_mesh.draw()
+
 
     # Function to save generated figures
     def save(self):
@@ -1016,7 +1016,11 @@ class Ui_MainWindow(object, ):
         self.tabWidget_Importing.setTabText(self.tabWidget_Importing.indexOf(self.Importing),
                                             _translate("MainWindow", "Importing"))
         self.pushButton_domain_apply.setText(_translate("MainWindow", "Apply"))
+        self.pushButton_domain_apply.setToolTip(_translate("MainWindow",
+                                                 "<html><head/><body><p>Press the button to generate a domain</p></body></html>"))
         self.pushButton_next_to_mesh.setText(_translate("MainWindow", "Next"))
+        self.pushButton_next_to_mesh.setToolTip(_translate("MainWindow",
+                                                 "<html><head/><body><p>Press the button to the next step</p></body></html>"))
         self.pushButton_domain_save.setText(_translate("MainWindow", "Save"))
         self.pushButton_domain_save.setToolTip(_translate("MainWindow",
                                                "<html><head/><body><p>Save the figure to your local directory</p></body></html>"))
@@ -1030,6 +1034,7 @@ class Ui_MainWindow(object, ):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.Domain), _translate("MainWindow", "Domain"))
         self.label_quality.setText(_translate("MainWindow", "Quality"))
         self.label_quality.setToolTip(_translate("MainWindow",
+
                                                "<html><head/><body><p>Determine the grid quality, including element shape, size, and smoothness</p></body></html>"))
         self.label_area.setText(_translate("MainWindow", "Area"))
         self.label_area.setToolTip(_translate("MainWindow",
@@ -1037,6 +1042,8 @@ class Ui_MainWindow(object, ):
         
         self.pushButton_mesh_save.setText(_translate("MainWindow", "Apply"))
         self.pushButton_next_to_inversion.setText(_translate("MainWindow", "Next"))
+        self.pushButton_next_to_inversion.setToolTip(_translate("MainWindow",
+                                                 "<html><head/><body><p>Press the button to the next step</p></body></html>"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.Mesh), _translate("MainWindow", "Mesh"))
         self.tabWidget_Importing.setTabText(self.tabWidget_Importing.indexOf(self.Domain_Mesh),
                                             _translate("MainWindow", "Domain and Mesh"))
