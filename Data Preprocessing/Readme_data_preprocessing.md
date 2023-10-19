@@ -2,7 +2,7 @@
 
 This window in this PyQt5-based application allows users to upload and save single and multiple files. Users can save their data files in specific file folder. Users can also see the details of the data files uploaded. This part can allow users to transfer raw data to calculated data. This readme provides an overview of the Data Preprocessing window and its functionalities.
 
-![main window.png](mainwindow.png)
+![mainwindow.jpg](mainwindow.jpg)
 
 ## Functions
 
@@ -10,21 +10,23 @@ This window in this PyQt5-based application allows users to upload and save sing
 
 **1. File upload**
 
-Click the button 'Choose your file', and the upload files window will jump out and ask users to select files on their computer.
+Click the button 'Choose your file', and the upload files window will jump out and ask users to select files on their computer. 
+Please note: only tx0 files and directories will be identified. Users can also upload files many times(can be from different locations), but the same files can't be uploaded twice.
 
-![file upload.png](fileupload.png)
+![choose your file.jpg](choose your file.jpg)
+![file upload.png](file upload.png)
 
 **2. File save** 
 
-After users select files to upload, another window will jump out to ask them to choose a file folder to save. Normally, users are recommended to save files to a data folder.
+After users select files to upload, another window will jump out to ask them to choose a file folder to save. Normally, users are recommended to save files to a data folder(better to be different from the uploading directory).
 
-![file save.png](filesave.png)
+![file save.jpg](file save.jpg)
 
 **3. File list ** 
 
 After users save the file, the file list will be shown.
 
-![file list.png](filelist.png)
+![file list.jpg](file list.jpg)
 
 ### Import and transfer data
 
@@ -32,22 +34,23 @@ After users save the file, the file list will be shown.
 
 Users can click the button 'Import', the application will jump to the Pre_processing page, and the file's content will be shown in the text-browser.
 
-![import.png](import.png)
+![import.jpg](import.jpg)
+![data show.jpg](data show.jpg)
 
 **2. Transfer data**
 
 Users can click the button 'Transfer data' to transfer raw data to calculated data.
 
-![datatransfer.png](datatransfer.png)
+![data transfer1.jpg](data transfer1.jpg)
+![Next button.jpg](Next button.jpg)
 
 ### Connect to other pages
 
-There are two buttons called 'Next-single file' and 'Next-multiple file'. Users can choose one of them to start different types of data visualization. 
+There are a button called 'Next-single file'. Users can click it and jump to part 'domain and mesh'. 
 
 'Next-single file' will allow users to start step-by-step data processing.
-
-'Next-multiple files' will allow users to upload multiple files to produce a time-lapse video.
-
+### tips for multiple file
+![tips.jpg](tips.jpg)
 
 ## Additional Notes
 
