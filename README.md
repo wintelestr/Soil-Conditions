@@ -36,33 +36,33 @@ python3 environment_config.py
 There are 5 basic steps/functions (MVP) in our GUI software:
  ### 1. Import Raw Data files and Data Preprocessing
 
-  <img src="merged application/FunctionDemonstration GIFs/Function demonstration Part1 Importing.GIF" alt="Inversion" width="450" height="300">
+  <img src="merged apllication/FunctionDemonstration GIFs/Function demonstration Part1 Importing.GIF" alt="Inversion" width="450" height="300">
 
 
 ###  2. Domain Selection and meshing
 
-  <img src="merged application/FunctionDemonstration GIFs/Function demonstration Part2 Domain and Mesh 1Domain.GIF" alt="Inversion" width="450" height="300">
+  <img src="merged apllication/FunctionDemonstration GIFs/Function demonstration Part2 Domain and Mesh 1Domain.GIF" alt="Inversion" width="450" height="300">
 
 
-   <img src="merged application/FunctionDemonstration GIFs/Function demonstration Part2 Domain and Mesh 2Mesh.GIF" alt="Inversion" width="450" height="300">
+   <img src="merged apllication/FunctionDemonstration GIFs/Function demonstration Part2 Domain and Mesh 2Mesh.GIF" alt="Inversion" width="450" height="300">
 
 
 ###  3. Parameters Selection and Inverse Model Computing
    
-  <img src="merged application/FunctionDemonstration GIFs/Function demonstration Part3 Inversion.GIF" alt="Inversion" width="450" height="300">
+  <img src="merged apllication/FunctionDemonstration GIFs/Function demonstration Part3 Inversion.GIF" alt="Inversion" width="450" height="300">
 
 
 ###  5. Water Content Computing
 
-  <img src="merged application/FunctionDemonstration GIFs/Function demonstration Part4 Water Content.GIF" alt="Water Content" width="450" height="300">
+  <img src="merged apllication/FunctionDemonstration GIFs/Function demonstration Part4 Water Content.GIF" alt="Water Content" width="450" height="300">
 
 
 ###  6. Results Visualization
 
-  <img src="merged application/FunctionDemonstration GIFs/Function demonstration Part5 Visualization 1Resistivity.GIF" alt="Water Content" width="450" height="300">
+  <img src="merged apllication/FunctionDemonstration GIFs/Function demonstration Part5 Visualization 1Resistivity.GIF" alt="Water Content" width="450" height="300">
 
 
- <img src="merged application/FunctionDemonstration GIFs/Function demonstration Part5 Visualization 2Water Content.GIF" alt="Water Content" width="450" height="300">
+ <img src="merged apllication/FunctionDemonstration GIFs/Function demonstration Part5 Visualization 2Water Content.GIF" alt="Water Content" width="450" height="300">
 
 
 **Each section's user documentation is in its respective file. Please open the folder to view.**
